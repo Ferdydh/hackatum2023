@@ -8,6 +8,10 @@ import { Terminal } from "./_components/terminal";
 import { ResizableBox } from "react-resizable";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "./_hooks/useWindowSize";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+
+import { GripHorizontal, GripVertical } from "lucide-react";
 
 export default function Home() {
   const [editorWidth, setEditorWidth] = useState(0);
@@ -48,9 +52,9 @@ export default function Home() {
         <ResizableBox
           onResize={(_, { size }) => resizeWidth(size.width)}
           handle={
-            <div className="absolute right-[-15px] top-[50%] z-10">text</div>
+            <hr className=" absolute right-[-3px] top-[5%] z-10 h-full w-[10px] cursor-ew-resize border-solid " />
           }
-          className="relative border-r-2 border-solid "
+          className="relative border-r-2 border-solid hover:border-r-4 hover:border-gray-400"
           width={300}
           axis="x"
         >
@@ -67,14 +71,16 @@ export default function Home() {
           <ResizableBox
             onResize={(_, { size }) => resizeHeight(size.height)}
             handle={
-              <div className="absolute bottom-[-15px] left-[50%] z-10">
-                text
-              </div>
+              <hr className="absolute bottom-[-37px] left-[0] right-[0] z-10 h-[10px] w-full cursor-ns-resize border-solid hover:border-r-4 hover:border-gray-400" />
+              // <div className="absolute bottom-[-37px] left-[50%] z-10">
+              //   <GripHorizontal size={20} />
+              // </div>
             }
-            className="relative border-b-2 border-solid"
+            className="relative border-b-2 border-solid "
             height={windowSize.height - 300}
             axis="y"
           >
+            <Label className="mx-3 text-xl">File Name</Label>
             <FileEditor></FileEditor>
           </ResizableBox>
           <ResizableBox height={terminalHeight} axis="y">
