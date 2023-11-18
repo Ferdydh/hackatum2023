@@ -3,21 +3,24 @@ from pydantic import BaseModel, Field
 from .utils import register_tool
 
 class UserProject:
+    # getters for the current state of the project
     def get_all_files(self) -> dict:
         pass
     def get_current_file(self) -> str:
         pass
-    def new_file(self, full_path: str) -> str:
+
+    # tools for AI
+    async def new_file(self, full_path: str) -> str:
         pass
-    def open_file(self, full_path: str) -> str:
+    async def open_file(self, full_path: str) -> str:
         pass
-    def remove_lines(self, start: int, end: int) -> str:
+    async def remove_lines(self, start: int, end: int) -> str:
         pass
-    def insert_lines(self, at: int, append_content: str) -> str:
+    async def insert_lines(self, at: int, append_content: str) -> str:
         pass
-    def replace_lines(self, start: int, end: int, new_content: str) -> str:
+    async def replace_lines(self, start: int, end: int, new_content: str) -> str:
         pass
-    def execute_command(self, command: str) -> str:
+    async def execute_command(self, command: str) -> str:
         pass
     
     def register_all_tools(self):
@@ -42,19 +45,20 @@ class FakeProject(UserProject):
     def get_current_file(self):
         return self.current_file
 
-    def new_file(self, full_path: str):
+    # tools for AI
+    async def new_file(self, full_path: str):
         if full_path in self.files:
             return f"ERROR: File already exists at {full_path}"
         self.files[full_path] = ""
         return "success"
     
-    def open_file(self, full_path: str):
+    async def open_file(self, full_path: str):
         if full_path not in self.files:
             return f"ERROR: File does not exist at {full_path}"
         self.current_file = full_path
         return "success: see [OPEN FILE CONTENT] for the content of the opened file"
     
-    def remove_lines(self, start: int, end: int):
+    async def remove_lines(self, start: int, end: int):
         start, end = start - 1, end  # Adjust for zero-based indexing
         if start >= end:
             return "ERROR: Start line cannot be greater than or equal to end line."
@@ -70,7 +74,7 @@ class FakeProject(UserProject):
         self.files[self.current_file] = "\n".join(lines[:start] + lines[end:])
         return "success"
 
-    def insert_lines(self, at: int, append_content: str):
+    async def insert_lines(self, at: int, append_content: str):
         at = at - 1  # Adjust for zero-based indexing
         if not self.current_file:
             return "ERROR: No file is currently open, please open a file first using the open_file tool."
@@ -82,7 +86,7 @@ class FakeProject(UserProject):
         self.files[self.current_file] = "\n".join(lines[:at] + [append_content] + lines[at:])
         return "success"
     
-    def replace_lines(self, start: int, end: int, new_content: str):
+    async def replace_lines(self, start: int, end: int, new_content: str):
         start, end = start - 1, end  # Adjust for zero-based indexing
         if start >= end:
             return "ERROR: Start line cannot be greater than or equal to end line."
@@ -98,7 +102,7 @@ class FakeProject(UserProject):
         self.files[self.current_file] = "\n".join(lines[:start] + [new_content] + lines[end:])
         return "success"
     
-    def execute_command(self, command: str):
+    async def execute_command(self, command: str):
         return "success"
 
 class remove_lines(BaseModel):

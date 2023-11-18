@@ -10,7 +10,7 @@ def count_tokens(text: str) -> int:
     return len(tokenizer.encode(text))
 
 
-def call_requested_function(call_request, func_lookup):
+async def call_requested_function(call_request, func_lookup):
     # parse function call
     func_name = call_request.name
     arguments = call_request.arguments
@@ -24,7 +24,7 @@ def call_requested_function(call_request, func_lookup):
 
     # call function
     try:
-        return func_lookup[func_name](**params)
+        return await func_lookup[func_name](**params)
     except Exception as e:
         return f"Error: {e}"
     

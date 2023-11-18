@@ -2,9 +2,9 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 from .utils import schema_to_openai_func, call_requested_function, register_tool, add_line_numbers
 from .userproject import UserProject, FakeProject
-from openai import OpenAI
+from openai import AsyncOpenAI
 
-client = OpenAI()
+client = AsyncOpenAI()
 
 MAX_CALLS_PER_PROMPT = 100
 
@@ -37,13 +37,13 @@ For each line in the file, the line number is shown on the left with a |. You ca
         return SYSTEM + "Currently no file is open."
     
 # handle all tool calls until there are no more tool calls
-def prompt(messages: list, prompt: str, state: UserProject):
+async def prompt(messages: list, prompt: str, state: UserProject):
     tools, func_lookup = state.register_all_tools()
     messages.append({"role": "user", "content": prompt})
     
     # keep calling the completion endpoint until there are no more tool calls
     for i in range(MAX_CALLS_PER_PROMPT):
-        completion = client.chat.completions.create(
+        completion = await client.chat.completions.create(
             model="gpt-4-1106-preview",
             messages=[{"role": "system", "content": with_latest_state(state)}] + messages,
             tools=tools,
