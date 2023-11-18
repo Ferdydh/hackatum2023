@@ -1,7 +1,8 @@
 import axios from "axios";
 import qs from "qs";
 
-const BACKEND_URI = "http://python:8002"
+const LOCAL_BACKEND_URI = "http://python:8002"
+const BACKEND_URI = "http://192.168.137.17:8002"
 
 export const helloCall = async (params: {
   query_string: string
