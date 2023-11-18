@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { HelloComponent } from "~/app/_components/hello-test";
-import { ProjectStructure } from "./_components/project-structure";
+import { Sidebar } from "./_components/sidebar";
 import { Menu } from "./_components/menu";
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
         <Menu />
       </div>
       <div className="w-screen flex flex-row">
-        <ProjectStructure></ProjectStructure>
+        <Sidebar project="testt"></Sidebar>
         <div>
           <div>Text Editor</div>
           <div>Console</div>
