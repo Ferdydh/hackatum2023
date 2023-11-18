@@ -1,21 +1,35 @@
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { cn } from "@/lib/utils"
-import { Directory } from "~/lib/types"
-import { DirectoryComponent } from "./directory-component"
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { Directory } from "~/lib/types";
+import { DirectoryComponent } from "./directory-component";
+
+import { FolderPlus, FilePlus } from "lucide-react";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  root: Directory[]
+  root: Directory[];
 }
 
 export function Sidebar({ className, root }: SidebarProps) {
   return (
     <div className={className}>
-      <div className="py-3">
+      <div className=" flex items-center justify-between py-3">
         <h2 className="relative px-5 text-lg font-semibold tracking-tight">
           Explorer
         </h2>
-        {/* TODO Add  icons on the right*/}
+        <div>
+          <Button variant="ghost" size="icon">
+            <FolderPlus />
+          </Button>
+
+          <Button variant="ghost" size="icon">
+            <FilePlus />
+          </Button>
+        </div>
+
+        {/* TODO Add icons on the right*/}
         {/* TODO Create new file and delete file */}
       </div>
       <ScrollArea className="h-[calc(100vh-150px)]">
@@ -28,5 +42,5 @@ export function Sidebar({ className, root }: SidebarProps) {
         </div>
       </ScrollArea>
     </div>
-  )
+  );
 }
