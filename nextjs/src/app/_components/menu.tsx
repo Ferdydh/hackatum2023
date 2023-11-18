@@ -25,28 +25,34 @@ import { Switch } from "@/components/ui/switch";
 
 export function Menu() {
   return (
-    <Menubar className="">
-      <Input type="email" placeholder="Email" />
+    <Menubar className="flex items-center justify-between">
+      <div>
+        <Label>Logo</Label>
+      </div>
 
-      <MenubarMenu>
-        <MenubarTrigger>Settings</MenubarTrigger>
-        <MenubarContent>
-          <div className="flex items-center">
-            <Label htmlFor="dark-mode">Dark Mode</Label>
-            <Switch id="dark-mode" />
-          </div>
+      <Input type="email" placeholder="Email" className="w-1/3" />
 
-          <MenubarSeparator />
-          <MenubarItem inset>Edit...</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem inset>Add Profile...</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
+      <div className="flex items-center">
+        <MenubarMenu>
+          <MenubarTrigger>Settings</MenubarTrigger>
+          <MenubarContent>
+            <div className="m-3 flex items-center ">
+              <Label htmlFor="dark-mode">Dark Mode</Label>
+              <Switch id="dark-mode" />
+            </div>
 
-      <Avatar>
-        <AvatarImage alt="@shadcn" />
-        <AvatarFallback>JB</AvatarFallback>
-      </Avatar>
+            <MenubarSeparator />
+            <MenubarItem inset>Edit...</MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem inset>Add Profile...</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+
+        <Avatar>
+          <AvatarImage alt="@shadcn" />
+          <AvatarFallback>JB</AvatarFallback>
+        </Avatar>
+      </div>
     </Menubar>
   );
 }
