@@ -13,6 +13,6 @@ docker build -t ducky . && docker run -p 8002:8002 -v $(pwd)/app:/code/app ducky
 Whenever you need to install a new package, do
 
 ```bash
-pip install <package>
-pip freeze > requirements.txt
+pip install [package]
+pip list --format=freeze > requirements.txt
 ```
