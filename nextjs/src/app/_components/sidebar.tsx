@@ -15,7 +15,8 @@ export function Sidebar({ className, root }: SidebarProps) {
         <h2 className="relative px-5 text-lg font-semibold tracking-tight">
           Explorer
         </h2>
-        {/* Add  icons on the right*/}
+        {/* TODO Add  icons on the right*/}
+        {/* TODO Create new file and delete file */}
       </div>
       <ScrollArea className="h-[calc(100vh-150px)]">
         <div className="pl-4">
