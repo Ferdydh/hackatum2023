@@ -47,5 +47,96 @@ const mock_project_structure: Directory[] = [
     name: "file",
     file_path: "/file",
   },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+  {
+    name: "folder",
+    file_path: "/folder",
+    sub_directories: [],
+  },
+  {
+    name: "file",
+    file_path: "/file",
+  },
+
 ]
 
