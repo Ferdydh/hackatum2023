@@ -8,6 +8,7 @@ import { Terminal } from "./_components/terminal";
 import { ResizableBox } from "react-resizable";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "./_hooks/useWindowSize";
+import { api } from "~/trpc/react";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
@@ -42,6 +43,14 @@ export default function Home() {
     setEditorHeight(windowSize.height - terminalHeight);
     setEditorWidth(windowSize.width - sidebarWidth);
   }, [windowSize]);
+
+
+
+
+
+
+
+
 
   return (
     <main className="min-h-screen w-screen items-center overflow-hidden">
@@ -95,15 +104,15 @@ export default function Home() {
 const mock_project_structure: Directory[] = [
   {
     name: "Folder 1",
-    file_path: "/Folder 1",
+    full_path: "/Folder 1",
     sub_directories: [
       {
         name: "Folder 2",
-        file_path: "/Folder 1/Folder 2",
+        full_path: "/Folder 1/Folder 2",
         sub_directories: [
           {
             name: "test.py",
-            file_path: "/Folder 1/Folder 2/test.py",
+            full_path: "/Folder 1/Folder 2/test.py",
           },
         ],
       },
@@ -111,101 +120,101 @@ const mock_project_structure: Directory[] = [
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
   {
     name: "folder",
-    file_path: "/folder",
+    full_path: "/folder",
     sub_directories: [],
   },
   {
     name: "file",
-    file_path: "/file",
+    full_path: "/file",
   },
 ];
