@@ -1,0 +1,28 @@
+# Development
+version: '3'
+services:
+  nextjs:
+    build:
+      context: ./nextjs
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    working_dir: /nextApp
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./nextjs:/nextApp
+      - /nextApp/node_modules
+      - /nextApp/.next
+    depends_on:
+      - python
+  python:
+    build: ./python
+    platform: linux/amd64
+    ports:
+      - "8002:8002"
+    working_dir: /code/app
+    environment:
+      - WORKING_ENV=development
+    volumes:
+      - ./python:/code/app

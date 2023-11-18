@@ -1,0 +1,4 @@
+fastapi~=0.101.1
+uvicorn
+python-dotenv~=1.0.0
+starlette~=0.27.0
