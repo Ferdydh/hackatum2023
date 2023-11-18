@@ -24,6 +24,18 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import Ducky from "../img/Ducky.png";
+import Image from "next/image";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { useTheme } from "next-themes";
 
@@ -35,9 +47,14 @@ export function Menu() {
   };
 
   return (
-    <Menubar className="flex items-center justify-between ">
-      <div>
-        <Label>Logo</Label>
+    <Menubar className="flex items-center justify-between">
+      <div className="flex items-center">
+        <Image
+          src={Ducky}
+          alt="Ducky"
+          className="mx-3 h-7 w-10 object-contain"
+        />
+        <Label className="text-xl">Ducky</Label>
       </div>
 
       <Input
@@ -63,10 +80,22 @@ export function Menu() {
               <Label className="mr-5">Experimental Mode</Label>
               <Switch />
             </div>
+            <Select>
+              <SelectTrigger className="">
+                <SelectValue placeholder="Select an Avatar" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="apple">Ducky</SelectItem>
+                  <SelectItem value="banana">GPT</SelectItem>
+                  <SelectItem value="blueberry">Random</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </MenubarContent>
         </MenubarMenu>
 
-        <Separator orientation="vertical" className="mx-2" />
+        <Separator orientation="vertical" className="mx-1" />
 
         <Button variant="ghost">
           <LogOut size={20} className="mr-2" />
