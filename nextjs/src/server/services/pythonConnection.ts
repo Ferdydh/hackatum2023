@@ -1,13 +1,14 @@
 import axios from "axios";
 import qs from "qs";
-import { env } from "~/env.mjs";
+
+const BACKEND_URI = "http://localhost:8002"
 
 export const helloCall = async (params: {
-  query_string: string, offset: number, search_type: string,
+  query_string: string
 }) => {
   const { data } = await axios.get<{
     resultString: string;
-  }>(env.BACKEND_URI, {
+  }>(BACKEND_URI + "/v1/hello/test", {
     params,
     timeout: 8000,
     headers: {

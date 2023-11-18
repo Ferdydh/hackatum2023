@@ -8,9 +8,6 @@ export function HelloComponent() {
 
   return (
     <div>
-
-      <button></button>
-
       {data && !isLoading &&
         <div>
           <span>{data.greeting}</span>

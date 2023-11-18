@@ -7,13 +7,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    working_dir: /nextApp
+    working_dir: /app
     environment:
       - NODE_ENV=development
     volumes:
-      - ./nextjs:/nextApp
-      - /nextApp/node_modules
-      - /nextApp/.next
+      - ./nextjs:/app
+      - /app/node_modules
+      - /app/.next
     depends_on:
       - python
   python:

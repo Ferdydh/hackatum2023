@@ -7,7 +7,7 @@ export const helloRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(async ({ input }) => {
-      const result = await helloCall(input.text);
+      const result = await helloCall({ query_string: input.text });
 
       return {
         greeting: `Hello ${input.text} from NextJS server`,

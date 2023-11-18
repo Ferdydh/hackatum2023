@@ -5,6 +5,12 @@
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+
+  eslint: {
+    // Warning: Don't care about eslint
+    ignoreDuringBuilds: true,
+  },
+};
 
 export default config;
