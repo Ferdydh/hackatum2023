@@ -87,10 +87,7 @@ export default function Home() {
               height={windowSize.height - 300}
               axis="y"
             >
-              <>
-                <Label className="mx-3 text-xl">File Name</Label>
-                <FileEditor></FileEditor>
-              </>
+              <FileEditor></FileEditor>
             </ResizableBox>
             <ResizableBox height={terminalHeight} axis="y">
               <Terminal></Terminal>
