@@ -12,8 +12,8 @@ def count_tokens(text: str) -> int:
 
 def call_requested_function(call_request, func_lookup):
     # parse function call
-    func_name = call_request['name']
-    arguments = call_request['arguments']
+    func_name = call_request.name
+    arguments = call_request.arguments
 
     if func_name not in func_lookup:
         return f"Error: Function {func_name} does not exist."
@@ -74,3 +74,25 @@ def schema_to_openai_func(schema: dict | Type[BaseModel], nested=True) -> dict:
             'required': schema.get('required', [])
         }}
     }
+
+def register_tool(model_func):
+    tools = [
+        schema_to_openai_func(model)
+        for model, _ in model_func
+    ]
+    
+    func_lookup = {
+        model.__name__: func
+        for model, func in model_func
+    }
+    return tools, func_lookup
+
+def add_line_numbers(code):
+    # Split the code into lines
+    lines = code.split('\n')
+    
+    # Add line numbers to each line
+    numbered_lines = [f"{i + 1}|{line}" for i, line in enumerate(lines)]
+    
+    # Join the lines back into a single string
+    return '\n'.join(numbered_lines)
