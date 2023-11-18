@@ -9,7 +9,27 @@ tokenizer = tiktoken.get_encoding("cl100k_base")
 def count_tokens(text: str) -> int:
     return len(tokenizer.encode(text))
 
-# recursively remove 'title' keys from schema
+
+def call_requested_function(call_request, func_lookup):
+    # parse function call
+    func_name = call_request['name']
+    arguments = call_request['arguments']
+
+    if func_name not in func_lookup:
+        return f"Error: Function {func_name} does not exist."
+    try:
+        params = json.loads(arguments)
+    except Exception as e:    
+        return f"Error: Failed to parse arguments, make sure your arguments is a valid JSON object: {e}"
+
+    # call function
+    try:
+        return func_lookup[func_name](**params)
+    except Exception as e:
+        return f"Error: {e}"
+    
+
+# Pydantic -> OpenAI function schema
 def remove_title(d) -> dict | list:
     if isinstance(d, dict):
         if 'title' in d and type(d['title']) == str:
