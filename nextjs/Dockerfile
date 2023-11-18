@@ -13,11 +13,11 @@ COPY package*.json ./
 COPY . .
 
 # Install dependencies in /app
-RUN pnpm install
+RUN npm install
 
 # Ensure port 3000 is accessible to our system
 EXPOSE 3000
 
 # Run yarn dev, as we would via the command line 
 # RUN ls -al
-CMD ["pnpm", "run", "dev"]
+CMD ["npm", "run", "dev"]
