@@ -12,8 +12,6 @@ import { api } from "~/trpc/react";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
-import { GripHorizontal, GripVertical } from "lucide-react";
-
 export default function Home() {
   const [editorWidth, setEditorWidth] = useState(0);
   const [sidebarWidth, setSidebarWidth] = useState(300);
@@ -44,14 +42,6 @@ export default function Home() {
     setEditorWidth(windowSize.width - sidebarWidth);
   }, [windowSize]);
 
-
-
-
-
-
-
-
-
   return (
     <main className="min-h-screen w-screen items-center overflow-hidden">
       <div>
@@ -75,26 +65,26 @@ export default function Home() {
           axis="x"
           height={windowSize.height - 160}
         >
-          {" "}
-          {/** 150 is the header height */}
-          <ResizableBox
-            onResize={(_, { size }) => resizeHeight(size.height)}
-            handle={
-              <hr className="absolute bottom-[-37px] left-[0] right-[0] z-10 h-[10px] w-full cursor-ns-resize border-solid hover:border-r-4 hover:border-gray-400" />
-              // <div className="absolute bottom-[-37px] left-[50%] z-10">
-              //   <GripHorizontal size={20} />
-              // </div>
-            }
-            className="relative border-b-2 border-solid "
-            height={windowSize.height - 300}
-            axis="y"
-          >
-            <Label className="mx-3 text-xl">File Name</Label>
-            <FileEditor></FileEditor>
-          </ResizableBox>
-          <ResizableBox height={terminalHeight} axis="y">
-            <Terminal></Terminal>
-          </ResizableBox>
+          <>
+            {/** 150 is the header height */}
+            <ResizableBox
+              onResize={(_, { size }) => resizeHeight(size.height)}
+              handle={
+                <hr className="absolute bottom-[-37px] left-[0] right-[0] z-10 h-[10px] w-full cursor-ns-resize border-solid hover:border-r-4 hover:border-gray-400" />
+              }
+              className="relative border-b-2 border-solid "
+              height={windowSize.height - 300}
+              axis="y"
+            >
+              <>
+                <Label className="mx-3 text-xl">File Name</Label>
+                <FileEditor></FileEditor>
+              </>
+            </ResizableBox>
+            <ResizableBox height={terminalHeight} axis="y">
+              <Terminal></Terminal>
+            </ResizableBox>
+          </>
         </ResizableBox>
       </div>
     </main>

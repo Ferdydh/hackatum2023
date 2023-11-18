@@ -17,6 +17,7 @@ export function FileEditor({ className }: FileEditorProps) {
       defaultLanguage="javascript"
       defaultValue="// some comment"
       theme={editorTheme}
+      className="mt-2"
     />
   );
 }
