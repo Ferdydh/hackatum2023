@@ -2,15 +2,17 @@
 
 ## Running
 
-Build the docker image:
+Build and run the docker container with hot reload enabled:
     
 ```bash
-docker build -t ducky .
+docker build -t ducky . && docker run -p 8002:8002 -v $(pwd)/app:/code/app ducky
 ```
 
-Now run it, mounting the app directory to the container to enable hot reload:
+## During Development
+
+Whenever you need to install a new package, do
 
 ```bash
-docker run -p 8002:8002 -v $(pwd)/app:/code/app ducky
+pip install <package>
+pip freeze > requirements.txt
 ```
-
