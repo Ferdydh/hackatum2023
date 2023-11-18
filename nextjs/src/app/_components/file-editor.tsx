@@ -1,9 +1,23 @@
-"use client"
+import React, { useState, useEffect } from "react";
+import Editor from "@monaco-editor/react";
+import { useTheme } from "next-themes";
 
-import Editor from '@monaco-editor/react';
+interface FileEditorProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-interface FileEditorProps extends React.HTMLAttributes<HTMLDivElement> {
-}
 export function FileEditor({ className }: FileEditorProps) {
-  return <Editor defaultLanguage="javascript" defaultValue="// some comment" />;
+  const { theme } = useTheme();
+  const [editorTheme, setEditorTheme] = useState("light");
+
+  useEffect(() => {
+    setEditorTheme(theme === "dark" ? "vs-dark" : "light");
+  }, [theme]);
+
+  return (
+    <Editor
+      defaultLanguage="javascript"
+      defaultValue="// some comment"
+      theme={editorTheme}
+      className="mt-2"
+    />
+  );
 }

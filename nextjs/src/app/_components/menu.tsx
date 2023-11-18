@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -12,96 +14,99 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from "@/components/ui/menubar"
+} from "@/components/ui/menubar";
+
+import { SlidersHorizontal, LogOut } from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import Ducky from "../img/Ducky.png";
+import Image from "next/image";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { useTheme } from "next-themes";
 
 export function Menu() {
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
   return (
-    <Menubar>
-      <MenubarMenu>
-        <MenubarTrigger>File</MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>
-            New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem>
-            New Window <MenubarShortcut>⌘N</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem disabled>New Incognito Window</MenubarItem>
-          <MenubarSeparator />
-          <MenubarSub>
-            <MenubarSubTrigger>Share</MenubarSubTrigger>
-            <MenubarSubContent>
-              <MenubarItem>Email link</MenubarItem>
-              <MenubarItem>Messages</MenubarItem>
-              <MenubarItem>Notes</MenubarItem>
-            </MenubarSubContent>
-          </MenubarSub>
-          <MenubarSeparator />
-          <MenubarItem>
-            Print... <MenubarShortcut>⌘P</MenubarShortcut>
-          </MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger>Edit</MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>
-            Undo <MenubarShortcut>⌘Z</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem>
-            Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-          </MenubarItem>
-          <MenubarSeparator />
-          <MenubarSub>
-            <MenubarSubTrigger>Find</MenubarSubTrigger>
-            <MenubarSubContent>
-              <MenubarItem>Search the web</MenubarItem>
-              <MenubarSeparator />
-              <MenubarItem>Find...</MenubarItem>
-              <MenubarItem>Find Next</MenubarItem>
-              <MenubarItem>Find Previous</MenubarItem>
-            </MenubarSubContent>
-          </MenubarSub>
-          <MenubarSeparator />
-          <MenubarItem>Cut</MenubarItem>
-          <MenubarItem>Copy</MenubarItem>
-          <MenubarItem>Paste</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger>View</MenubarTrigger>
-        <MenubarContent>
-          <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
-          <MenubarCheckboxItem checked>
-            Always Show Full URLs
-          </MenubarCheckboxItem>
-          <MenubarSeparator />
-          <MenubarItem inset>
-            Reload <MenubarShortcut>⌘R</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem disabled inset>
-            Force Reload <MenubarShortcut>⇧⌘R</MenubarShortcut>
-          </MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem inset>Toggle Fullscreen</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem inset>Hide Sidebar</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger>Profiles</MenubarTrigger>
-        <MenubarContent>
-          <MenubarRadioGroup value="benoit">
-            <MenubarRadioItem value="andy">Andy</MenubarRadioItem>
-            <MenubarRadioItem value="benoit">Benoit</MenubarRadioItem>
-            <MenubarRadioItem value="Luis">Luis</MenubarRadioItem>
-          </MenubarRadioGroup>
-          <MenubarSeparator />
-          <MenubarItem inset>Edit...</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem inset>Add Profile...</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
+    <Menubar className="flex items-center justify-between">
+      <div className="flex items-center">
+        <Image
+          src={Ducky}
+          alt="Ducky"
+          className="mx-3 h-7 w-10 object-contain"
+        />
+        <Label className="text-xl">Ducky</Label>
+      </div>
+
+      <Input
+        type="prompt"
+        placeholder="What can I do for you?"
+        className="w-1/2"
+      />
+
+      <div className="flex items-center">
+        <MenubarMenu>
+          <MenubarTrigger>
+            <SlidersHorizontal size={20} className="mr-2" />
+            Settings
+          </MenubarTrigger>
+          <MenubarContent>
+            <div className="m-3 flex items-center justify-between">
+              <Label htmlFor="dark-mode" className="mr-5">
+                Dark Mode
+              </Label>
+              <Switch onClick={toggleTheme} />
+            </div>
+            <div className="m-3 flex items-center  justify-between">
+              <Label className="mr-5">Experimental Mode</Label>
+              <Switch />
+            </div>
+            <Select>
+              <SelectTrigger className="">
+                <SelectValue placeholder="Select an Avatar" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="apple">Ducky</SelectItem>
+                  <SelectItem value="banana">GPT</SelectItem>
+                  <SelectItem value="blueberry">Random</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </MenubarContent>
+        </MenubarMenu>
+
+        <Separator orientation="vertical" className="mx-1" />
+
+        <Button variant="ghost">
+          <LogOut size={20} className="mr-2" />
+          Logout
+        </Button>
+
+        <Avatar className="mx-5">
+          <AvatarImage alt="@shadcn" />
+          <AvatarFallback>JB</AvatarFallback>
+        </Avatar>
+      </div>
     </Menubar>
-  )
+  );
 }
