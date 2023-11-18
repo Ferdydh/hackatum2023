@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -17,19 +19,25 @@ import {
 import { SlidersHorizontal, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { Input } from "@/components/ui/input";
-
 import { Button } from "@/components/ui/button";
-
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+
+import { useTheme } from "next-themes";
 
 export function Menu() {
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
   return (
     <Menubar className="flex items-center justify-between ">
       <div>
-        <Label className="text-white">Logo</Label>
+        <Label>Logo</Label>
       </div>
 
       <Input
@@ -45,20 +53,22 @@ export function Menu() {
             Settings
           </MenubarTrigger>
           <MenubarContent>
-            <div className="m-3 flex items-center">
+            <div className="m-3 flex items-center justify-between">
               <Label htmlFor="dark-mode" className="mr-5">
                 Dark Mode
               </Label>
-              <Switch id="dark-mode" />
+              <Switch onClick={toggleTheme} />
             </div>
-
-            <MenubarItem inset>Edit...</MenubarItem>
-
-            <MenubarItem inset>Add Profile...</MenubarItem>
+            <div className="m-3 flex items-center  justify-between">
+              <Label className="mr-5">Experimental Mode</Label>
+              <Switch />
+            </div>
           </MenubarContent>
         </MenubarMenu>
 
-        <Button variant="ghost" className=" text-white">
+        <Separator orientation="vertical" className="mx-2" />
+
+        <Button variant="ghost">
           <LogOut size={20} className="mr-2" />
           Logout
         </Button>

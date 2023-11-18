@@ -28,9 +28,6 @@ export function Sidebar({ className, root }: SidebarProps) {
             <FilePlus />
           </Button>
         </div>
-
-        {/* TODO Add icons on the right*/}
-        {/* TODO Create new file and delete file */}
       </div>
       <ScrollArea className="h-[calc(100vh-150px)]">
         <div className="pl-4">
