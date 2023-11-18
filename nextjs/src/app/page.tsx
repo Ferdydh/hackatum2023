@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { HelloComponent } from "~/app/_components/hello-test";
 import { ProjectStructure } from "./_components/project-structure";
-import { MyMenubar } from "./_components/my-menubar";
+import { Menu } from "./_components/menu";
 
 export default function Home() {
   return (
@@ -10,14 +10,15 @@ export default function Home() {
         <Input></Input> */}
 
       <div className="w-screen h-12">
-        <MyMenubar />
+        <Menu />
       </div>
-      <ProjectStructure></ProjectStructure>
-      <div>
-        <div>Text Editor</div>
-        <div>Console</div>
+      <div className="w-screen flex flex-row">
+        <ProjectStructure></ProjectStructure>
+        <div>
+          <div>Text Editor</div>
+          <div>Console</div>
+        </div>
       </div>
-
     </main>
   );
 }
