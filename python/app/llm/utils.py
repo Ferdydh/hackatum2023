@@ -44,11 +44,13 @@ def schema_to_openai_func(schema: dict | Type[BaseModel], nested=True) -> dict:
 
     # Construct the OpenAI function schema format
     return {
+        'type': 'function',
+        "function": {
         'name': schema.get('title', ''),
         'description': schema.get('description', ''),
         'parameters': {
             'type': 'object',
             'properties': schema['properties'],
             'required': schema.get('required', [])
-        }
+        }}
     }
