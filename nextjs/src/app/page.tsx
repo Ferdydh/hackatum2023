@@ -38,9 +38,20 @@ export default function Home() {
 
   // on resizing browser window
   useEffect(() => {
-    setEditorHeight(windowSize.height - terminalHeight);
-    setEditorWidth(windowSize.width - sidebarWidth);
-  }, [windowSize]);
+    setEditorHeight(windowSize.height - terminalHeight)
+    setEditorWidth(windowSize.width - sidebarWidth)
+  }, [windowSize])
+
+  const [rootFolder, setRootFolder] = useState<Directory[]>()
+
+  const { data: rootFolderData, isLoading: rootFolderIsLoading } = api.root.get_project_directory.useQuery() // Should we make skeleton for sidebar?
+
+  useEffect(() => {
+    setRootFolder(rootFolderData?.root)
+  }, [rootFolderData])
+
+
+
 
   return (
     <main className="min-h-screen w-screen items-center overflow-hidden">
@@ -57,7 +68,7 @@ export default function Home() {
           width={300}
           axis="x"
         >
-          <Sidebar root={mock_project_structure} className="w-full"></Sidebar>
+          <Sidebar root={rootFolder} className="w-full"></Sidebar>
         </ResizableBox>
 
         <ResizableBox
@@ -88,123 +99,5 @@ export default function Home() {
         </ResizableBox>
       </div>
     </main>
-  );
+  )
 }
-
-const mock_project_structure: Directory[] = [
-  {
-    name: "Folder 1",
-    full_path: "/Folder 1",
-    sub_directories: [
-      {
-        name: "Folder 2",
-        full_path: "/Folder 1/Folder 2",
-        sub_directories: [
-          {
-            name: "test.py",
-            full_path: "/Folder 1/Folder 2/test.py",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-  {
-    name: "folder",
-    full_path: "/folder",
-    sub_directories: [],
-  },
-  {
-    name: "file",
-    full_path: "/file",
-  },
-];
