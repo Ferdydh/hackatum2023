@@ -4,12 +4,16 @@ import { useTheme } from "next-themes";
 import { Label } from "@/components/ui/label";
 
 interface FileEditorProps extends React.HTMLAttributes<HTMLDivElement> {
-  fileFullPath: string,
-  fileContent: string,
-  handleSaveFile: (fileContent: string) => void
+  fileFullPath: string;
+  fileContent: string;
+  handleSaveFile: (fileContent: string) => void;
 }
 
-export function FileEditor({ fileContent, className, fileFullPath }: FileEditorProps) {
+export function FileEditor({
+  fileContent,
+  className,
+  fileFullPath,
+}: FileEditorProps) {
   const { theme } = useTheme();
   const [editorTheme, setEditorTheme] = useState("light");
 
@@ -18,7 +22,7 @@ export function FileEditor({ fileContent, className, fileFullPath }: FileEditorP
   }, [theme]);
 
   return (
-    <div className="w-full h-full min-h-full overflow-hidden">
+    <div className="h-full min-h-full w-full overflow-hidden">
       <Label className="mx-3 text-xl">{fileFullPath}</Label>
 
       {/* TODO buttons to save */}
@@ -31,27 +35,22 @@ export function FileEditor({ fileContent, className, fileFullPath }: FileEditorP
         className="mt-2"
         value={fileContent}
       />
-
     </div>
   );
 }
 
 const duckAscii = `READONLY MODE
 Tip: Open a file to start editing
-
-     ,----,
-___.\`      \`,
-\`===  D     :
-  \`'.      .'
-     )    (                   ,
-    /      \_________________/|
-   /                          |
-  |                           ;
-  |               _____       /
-  |      \       ______7    ,'
-  |       \    ______7     /
-   \       \`-,____7      ,'   
-^~^~^~^\`\                  /~^~^~^~^
-~^~^~^ \`----------------' ~^~^~^
-~^~^~^~^~^^~^~^~^~^~^~^~^~^~^~^~
-`
+                              
+        @@@@@@@@@             
+      @@@@&@@@@@@@@           
+     #@@@   @@@@@@@           
+  @@@@@@@@@@@@@@@@@           
+       @@@@@@@@@@@            
+       @@@@@@@@@@@@@@         
+     @@@@@@@@@@@@@@@@@@@@@@@@ 
+    @@@@@@@@@@@@@@@@@@@@@@@@  
+    @@@@@@@@@@@@@@@@@@@@@@@   
+     @@@@@@@@@@@@@@@@@@@@@    
+         @@@@@@@@@@@@@        
+`;

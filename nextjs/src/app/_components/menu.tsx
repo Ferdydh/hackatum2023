@@ -15,6 +15,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { SlidersHorizontal, LogOut, Save } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,13 +51,14 @@ import {
 import { useTheme } from "next-themes";
 
 interface MenuProps {
-  handleCommandStream: (eventSource: EventSource) => void,
-  speechMessage: string,
+  handleCommandStream: (eventSource: EventSource) => void;
+  speechMessage: string;
 }
 export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
   const { theme, setTheme } = useTheme();
   const [showPopover, setShowPopover] = useState(false);
   const [prompt, setPrompt] = useState("");
+  const [isMrDuckySelected, setIsMrDuckySelected] = useState(false);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -66,17 +79,17 @@ export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
       url + "?user_message=" + encodeURIComponent(data.user_message),
     );
 
-    handleCommandStream(eventSource)
+    handleCommandStream(eventSource);
   };
 
   useEffect(() => {
     if (!speechMessage) {
       // setShowPopover(false);
-      return
+      return;
     }
 
     setShowPopover(true);
-  }, [speechMessage])
+  }, [speechMessage]);
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -133,7 +146,11 @@ export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
               <Switch />
             </div>
             <Select
-              onValueChange={(e) => setSelectedAvatar(e)}
+              onValueChange={(e) => {
+                const newValue = e; // Assuming `e` directly gives the value. If it's an event, use e.target.value
+                setSelectedAvatar(newValue);
+                setIsMrDuckySelected(newValue === "mrducky"); // Check if Mr Ducky is selected
+              }}
               value={selectedAvatar}
             >
               <SelectTrigger>
@@ -161,6 +178,33 @@ export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
           <AvatarFallback>JB</AvatarFallback>
         </Avatar>
       </div>
+      {isMrDuckySelected && (
+        <AlertDialog
+          open={isMrDuckySelected}
+          onOpenChange={setIsMrDuckySelected}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>You have selected Mr Ducky</AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogDescription>
+              <Image
+                src={MrDucky}
+                alt="Avatar"
+                className="h-29 my-2 object-contain"
+              />
+              Mr Ducky is a better, faster, and more intelligent version of
+              Ducky. He is still in beta and is not recommended for use in
+              production. Use with caution.
+            </AlertDialogDescription>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setIsMrDuckySelected(false)}>
+                Accept
+              </AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </Menubar>
   );
 }

@@ -67,7 +67,7 @@ export default function Home() {
   }
 
   const mutationEditFile = api.root.edit_file.useMutation({
-    onSuccess: ({ success }) => { },
+    onSuccess: ({ success }) => {},
   });
 
   function handleSaveFile(fileContent: string) {
@@ -84,31 +84,30 @@ export default function Home() {
   const handleCommandStream = (eventSource: EventSource) => {
     eventSource.onmessage = (event) => {
       const newCommand = event.data as Command;
-      commandQueue.add(newCommand)
-    }
+      commandQueue.add(newCommand);
+    };
 
     eventSource.onerror = (error) => {
       // Call backend and tell where we send an interruption
       console.error("EventSource failed:", error);
       eventSource.close();
     };
-  }
+  };
 
   useEffect(() => {
     // Start processing the queue when the component mounts
     processQueue();
   }, []);
 
-  const [speechMessage, setSpeechMessage] = useState("")
+  const [speechMessage, setSpeechMessage] = useState("");
   const [terminalOutput, setTerminalOutput] = useState("");
   const { theme, setTheme } = useTheme();
-
 
   const processQueue = () => {
     if (commandQueue.size === 0) {
       // Queue is empty, do something (e.g., stop processing)
       setTimeout(processQueue, 1000);
-      return
+      return;
     }
 
     const command = commandQueue.remove();
@@ -116,72 +115,72 @@ export default function Home() {
     if (command === undefined) {
       // Queue is empty, do something (e.g., stop processing)
       setTimeout(processQueue, 1000);
-      return
+      return;
     }
 
     switch (command.commandType) {
       case "NewFile":
         // Cursor Movement to new file
-        handleMoveAnimatedCursor("file-add")
+        handleMoveAnimatedCursor("file-add");
         break;
 
       case "DirectoryUpdate":
         // Set the new rootdir
-        setRootFolder(command.commandArgs.directories)
+        setRootFolder(command.commandArgs.directories);
         break;
 
       case "OpenFile":
         // Cursor movement to file
-        handleMoveAnimatedCursor(command.commandArgs.full_path)
+        handleMoveAnimatedCursor(command.commandArgs.full_path);
         break;
 
       case "EditFile":
         // Set file_contents
-        setFileContent(command.commandArgs.file_contents)
+        setFileContent(command.commandArgs.file_contents);
         break;
 
       case "TerminalExecute":
         // Cursor movement to terminal input
-        handleMoveAnimatedCursor("terminal")
+        handleMoveAnimatedCursor("terminal");
         break;
 
       case "TerminalUpdate":
         // set terminal content
-        setTerminalOutput(command.commandArgs.terminal_contents)
+        setTerminalOutput(command.commandArgs.terminal_contents);
         break;
 
       case "SpeechBubble":
         // Set speech message state
-        setSpeechMessage(command.commandArgs.speech_message)
+        setSpeechMessage(command.commandArgs.speech_message);
         break;
 
       case "OpenSettings":
         // Cursor Movement to settings and open the dropdown
-        handleMoveAnimatedCursor("settings")
+        handleMoveAnimatedCursor("settings");
         break;
 
       case "ToggleDarkMode":
         // Cursor to Toggle Dark Mode and toggle it
-        handleMoveAnimatedCursor("dark-mode-toggle")
+        handleMoveAnimatedCursor("dark-mode-toggle");
         setTheme(theme === "light" ? "dark" : "light");
         break;
 
       default:
-        console.error("Unkown command type")
+        console.error("Unkown command type");
         break;
     }
-  }
+  };
 
-  const [targetX, setTargetX] = useState(0)
-  const [targetY, setTargetY] = useState(0)
+  const [targetX, setTargetX] = useState(0);
+  const [targetY, setTargetY] = useState(0);
 
   function handleMoveAnimatedCursor(elementId: string) {
-    const rect = document.getElementById(elementId)?.getBoundingClientRect()
+    const rect = document.getElementById(elementId)?.getBoundingClientRect();
 
-    if (!rect) return
+    if (!rect) return;
 
-    setTargetX(rect.x)
-    setTargetY(rect.y)
+    setTargetX(rect.x);
+    setTargetY(rect.y);
   }
 
   return (
@@ -189,7 +188,10 @@ export default function Home() {
       <AnimatedCursor targetX={targetX} targetY={targetY} />
 
       <div>
-        <Menu handleCommandStream={handleCommandStream} speechMessage={speechMessage} />
+        <Menu
+          handleCommandStream={handleCommandStream}
+          speechMessage={speechMessage}
+        />
       </div>
       <div className="flex ">
         <ResizableBox
@@ -231,7 +233,10 @@ export default function Home() {
               ></FileEditor>
             </ResizableBox>
             <ResizableBox height={terminalHeight} axis="y">
-              <Terminal terminalOutput={terminalOutput} setTerminalOutput={setTerminalOutput}></Terminal>
+              <Terminal
+                terminalOutput={terminalOutput}
+                setTerminalOutput={setTerminalOutput}
+              ></Terminal>
             </ResizableBox>
           </>
         </ResizableBox>
