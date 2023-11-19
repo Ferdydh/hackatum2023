@@ -22,6 +22,10 @@ class EditFile(BaseModel):
     '''Save the contents of a file, returns true if successful'''
     file_contents: str
 
+class TerminalExecuteByHuman(BaseModel):
+    '''Execute a command in the terminal, returns the output of the command as str, along with new project directory'''
+    command: str
+
 class TerminalExecute(BaseModel):
     '''Execute a command in the terminal, returns the output of the command as str, along with new project directory'''
     pass

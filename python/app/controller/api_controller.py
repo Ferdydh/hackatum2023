@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app.services import api_service, mocked_service
-from app.models import NewFile, OpenFile, EditFile, TerminalExecute, File, Folder, Directory, TerminalResult
+from app.models import NewFile, OpenFile, EditFile, TerminalExecuteByHuman, File, Folder, Directory, TerminalResult
 
 router = APIRouter()
 
@@ -37,6 +37,6 @@ async def edit_file_controller(edit_file: EditFile) -> bool:
     return result
 
 @router.post("/terminal_execute")
-async def terminal_execute_controller(terminal_execute: TerminalExecute) -> TerminalResult:
+async def terminal_execute_controller(terminal_execute: TerminalExecuteByHuman) -> TerminalResult:
     result = await SERVICE.terminal_execute(terminal_execute)
     return result

@@ -10,6 +10,8 @@ class UserProject:
         pass
     def read_current_file(self) -> str:
         pass
+    def write_current_file(self, content: str) -> bool:
+        pass
 
     # tools for AI
     async def new_file(self, full_path: str) -> str:
@@ -54,6 +56,12 @@ class FakeProject(UserProject):
     
     def read_current_file(self) -> str:
         return self.files[self.current_file]
+    
+    def write_current_file(self, content: str) -> bool:
+        if not self.current_file:
+            return False
+        self.files[self.current_file] = content
+        return True
 
     # tools for AI
     async def new_file(self, full_path: str):

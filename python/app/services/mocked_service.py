@@ -1,5 +1,5 @@
 import os
-from app.models import NewFile, OpenFile, EditFile, File, Folder, Directory, TerminalExecute, TerminalResult
+from app.models import NewFile, OpenFile, EditFile, File, Folder, Directory, TerminalExecuteByHuman, TerminalResult
 
 async def get_directory() -> list[Directory]:
     return [
@@ -20,7 +20,7 @@ async def open_file(open_file: OpenFile) -> str:
 async def edit_file(edit_file: EditFile) -> bool:
     return True
 
-async def terminal_execute(terminal_execute: TerminalExecute) -> TerminalResult:
+async def terminal_execute(terminal_execute: TerminalExecuteByHuman) -> TerminalResult:
     return TerminalResult(
         output="hello, world\nhello, cats\nhello, dogs\nhello, furkan\nhello, jiwoo\nhello, jay\nhello, ferdy\nand so on",
         new_project_directory=[
