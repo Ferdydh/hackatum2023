@@ -7,18 +7,14 @@ import { DirectoryComponent } from "./directory-component"
 import { api } from "~/trpc/react";
 
 import { FolderPlus, FilePlus } from "lucide-react";
-// Note from FERDY
-// Leave here in case we need to bring the data fetching up to page
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  root: Directory[];
+  root: Directory[] | undefined
 }
 
 export function Sidebar({ className, root }: SidebarProps) {
-  const { data, isLoading } = api.root.get_project_directory.useQuery()
-
-  if (isLoading || !data) {
-    // TODO skeleton?
-    return <div></div>
+  // TODO skeleton?
+  if (!root) {
+    root = mock_project_structure;
   }
 
   return (
@@ -39,7 +35,7 @@ export function Sidebar({ className, root }: SidebarProps) {
       </div>
       <ScrollArea className="h-[calc(100vh-150px)]">
         <div className="pl-4">
-          {data.root.map((directory, i) => (
+          {root.map((directory, i) => (
             <div key={`${directory.full_path}-${i}`}>
               <DirectoryComponent dir={directory} />
             </div>
@@ -47,5 +43,16 @@ export function Sidebar({ className, root }: SidebarProps) {
         </div>
       </ScrollArea>
     </div>
-  );
+  )
 }
+
+
+
+const mock_project_structure: Directory[] = [
+  {
+    name: "file",
+    full_path: "/file",
+  },
+
+]
+

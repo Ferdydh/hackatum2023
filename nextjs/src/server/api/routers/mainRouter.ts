@@ -30,7 +30,7 @@ export const mainRouter = createTRPCRouter({
 
   open_file: publicProcedure
     .input(z.object({ full_path: z.string() }))
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       const { data } = await axios.post<string>(BACKEND_URI + "open_file", {
         full_path: input.full_path,
       });
@@ -42,7 +42,7 @@ export const mainRouter = createTRPCRouter({
 
   new_file: publicProcedure
     .input(z.object({ full_path: z.string() }))
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       const { data } = await axios.post<Directory[]>(BACKEND_URI + "new_file", {
         full_path: input.full_path,
       });
@@ -55,7 +55,7 @@ export const mainRouter = createTRPCRouter({
   edit_file: publicProcedure
     .input(z.object({ full_path: z.string() }))
     .input(z.object({ new_contents: z.string() }))
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       const { data } = await axios.post<boolean>(BACKEND_URI + "edit_file", {
         full_path: input.full_path,
         new_contents: input.new_contents,
