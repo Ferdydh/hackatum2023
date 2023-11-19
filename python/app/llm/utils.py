@@ -96,3 +96,37 @@ def add_line_numbers(code):
     
     # Join the lines back into a single string
     return '\n'.join(numbered_lines)
+
+async def chunk_stream(stream):
+    message = {
+    'role': 'assistant',
+    'content': '',
+    'tool_calls': []
+    }
+
+    async for chunk in stream:
+        delta = chunk.choices[0].delta
+        # Handle role updates
+        if delta.role:
+            message['role'] = delta.role
+        
+        # Handle content updates
+        if delta.content:
+            message['content'] += delta.content
+
+        # Handle tool calls
+        if delta.tool_calls:
+            for tool_call in delta.tool_calls:
+                call_index = tool_call.index
+                if len(message['tool_calls']) == call_index:
+                    # new tool call started, so add a new empty object to the tool_calls list
+                    message['tool_calls'].append({'id': None, 'type': 'function', 'function': {'name': '', 'arguments': ''}})
+                if tool_call.id:
+                    message['tool_calls'][call_index]['id'] = tool_call.id
+                if tool_call.type:
+                    message['tool_calls'][call_index]['type'] = tool_call.type
+                if tool_call.function.name:
+                    message['tool_calls'][call_index]['function']['name'] = tool_call.function.name
+                if tool_call.function.arguments:
+                    message['tool_calls'][call_index]['function']['arguments'] += tool_call.function.arguments
+        yield message
