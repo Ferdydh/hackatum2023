@@ -13,8 +13,8 @@ def hello_controller(query_string: str):
 
 
 # Endpoints
-SERVICE = mocked_service
-# SERVICE = api_service
+# SERVICE = mocked_service
+SERVICE = api_service
 
 @router.get("/get_project_directory")
 async def get_directory_controller() -> list[Directory]:

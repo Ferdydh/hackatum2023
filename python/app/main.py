@@ -17,8 +17,8 @@ logger.info("Application Started")
 app = FastAPI(title="Ducky", docs_url="/")
 
 origins = [
-    '*'
-    # "http://localhost",
+    # '*'
+    "http://localhost:3000",
     # "http://localhost:8080",
 ]
 

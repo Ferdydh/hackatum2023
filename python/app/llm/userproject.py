@@ -55,6 +55,8 @@ class FakeProject(UserProject):
         return self.current_file
     
     def read_current_file(self) -> str:
+        if not self.current_file:
+            return "BACKEND HAS NO OPEN FILE"
         return self.files[self.current_file]
     
     def write_current_file(self, content: str) -> bool:

@@ -23,8 +23,8 @@ async def message_stream(request: Request):
 
 
 # Endpoints
-SERVICE = mocked_stream_service
-# SERVICE = api_service
+# SERVICE = mocked_stream_service
+SERVICE = stream_service
 
 @router.post("/terminal_execute")
 async def terminal_execute_controller(terminal_execute: TerminalExecute) -> TerminalResult:
@@ -34,4 +34,4 @@ async def terminal_execute_controller(terminal_execute: TerminalExecute) -> Term
 
 @router.get("/prompt")
 async def prompt_controller(user_message: str, request: Request):
-    return StreamingResponse(stream_service.prompt_generator(user_message, request), media_type='text/event-stream')
+    return StreamingResponse(SERVICE.prompt_generator(user_message, request), media_type='text/event-stream')

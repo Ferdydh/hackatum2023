@@ -4,6 +4,7 @@ load_dotenv(override=True)
 from .utils import schema_to_openai_func, call_requested_function, register_tool, chunk_stream, add_line_numbers
 from .userproject import UserProject, FakeProject
 from app.models import NewFile, DirectoryUpdate, OpenFile, EditFile, TerminalExecute, TerminalUpdate, SpeechBubble, OpenSettings, ToggleTheme
+from app.services.api_service import recursive_convert
 from openai import AsyncOpenAI
 import re
 
@@ -169,9 +170,11 @@ async def prompt_stream(messages: list, prompt: str, state: UserProject):
 async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject):
     tools, func_lookup = state.register_all_tools()
     messages.append({"role": "user", "content": prompt})
+    print(f"PROMPT STARTED, MESSAGES: {messages}")
     
     # keep calling the completion endpoint until there are no more tool calls
     for i in range(MAX_CALLS_PER_PROMPT):
+        print(f"CALLING COMPLETION {i}")
         stream = await client.chat.completions.create(
             model="gpt-4-1106-preview",
             messages=[{"role": "system", "content": with_latest_state(state)}] + messages,
@@ -182,10 +185,12 @@ async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject):
         )
 
         # we're completing the response chunk by chunk, and pass a preview to the frontend/consumer
+        print(f"STREAM STARTED")
         i_think_this_msg_is_just_text = False
         async for partial_msg in chunk_stream(stream):
+            print(f"stream")
             try:
-                if len(partial_msg['content']) > 50:  # should be enough to tell if it's a parse code or not
+                if len(partial_msg['content']) > 20:  # should be enough to tell if it's a parse code or not
                     if parse_preview_code(partial_msg['content']):
                         if i_think_this_msg_is_just_text:
                             # but it turns out it wasn't, so we "undo" the mistake by yielding an empty speech bubble to the frontend
@@ -207,12 +212,16 @@ async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject):
                 pass
 
 
+        print(f"STREAM FINISHED")
         new_msg = partial_msg
+        if 'tool_calls' in new_msg and len(new_msg['tool_calls']) == 0:
+            # remove the empty tool_calls key
+            del new_msg['tool_calls']
         # full response received, proceed as normal
         messages.append(new_msg)
-        if new_msg.content: 
-            if parse_code(new_msg.content):
-                f, s, e, code = parse_code(new_msg.content)
+        if new_msg['content']: 
+            if parse_code(new_msg['content']):
+                f, s, e, code = parse_code(new_msg['content'])
                 if f=="INSERT_AT_LINE":
                     await state.insert_lines(s, code)
                     yield EditFile(file_contents=state.read_current_file())
@@ -220,23 +229,27 @@ async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject):
                     await state.replace_lines(s, e, code)
                     yield EditFile(file_contents=state.read_current_file())
             else:
-                yield SpeechBubble(speech_message=new_msg.content)
-        if new_msg.tool_calls:
-            for tool_call in new_msg.tool_calls:
-                f = tool_call.function
+                yield SpeechBubble(speech_message=new_msg['content'])
+        if 'tool_calls' in new_msg and new_msg['tool_calls']:
+            for tool_call in new_msg['tool_calls']:
+                print(f"CALLING FUNCTION {tool_call['function']['name']}")
+                f = tool_call['function']
                 # yield (f"Calling function: {f.name}, args = {f.arguments}")
                 ret_val = await call_requested_function(f, func_lookup)
                 # yield (f"Returned: {ret_val}")
+                print(f"RETURNED: {ret_val}")
                 if not ret_val.startswith("Error"):
-                    a = json.loads(f.arguments)
+                    a = json.loads(f['arguments'])
                     # generate commands
-                    if f.name == "new_file":
+                    if f['name'] == "new_file":
                         yield NewFile(full_path=a['full_path'])
-                    if f.name == "open_file":
+                        yield DirectoryUpdate(directories=recursive_convert(state.get_all_files()))
+                    if f['name'] == "open_file":
                         yield OpenFile(full_path=a['full_path'])
-                    if f.name == "remove_lines":
                         yield EditFile(file_contents=state.read_current_file())
-                    if f.name == "execute_command":
+                    if f['name'] == "remove_lines":
+                        yield EditFile(file_contents=state.read_current_file())
+                    if f['name'] == "execute_command":
                         yield TerminalExecute()
                         yield TerminalUpdate(terminal_contents=ret_val)
                     # if f.name == "open_settings":
@@ -244,7 +257,9 @@ async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject):
 
 
                 # insert the return value into the message
-                messages.append({"role": "tool", "content": ret_val, "tool_call_id": tool_call.id})
+                messages.append({"role": "tool", "content": ret_val, "tool_call_id": tool_call['id']})
+                
         else:
+            print(f"GPT TURN FINISHED")
             break
         

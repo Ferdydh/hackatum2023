@@ -56,11 +56,11 @@ async def new_file(new_file: NewFile) -> list[Directory]:
     # await aiofiles.os.open(full_path, 'w').close()
     # return await get_directory()
 
-    global_state.new_file(new_file.full_path)
+    await global_state.new_file(new_file.full_path)
     return recursive_convert(global_state.get_all_files())
 
 async def open_file(open_file: OpenFile) -> str:
-    global_state.open_file(open_file.full_path)
+    await global_state.open_file(open_file.full_path)
     return global_state.read_current_file()
 
 async def edit_file(edit_file: EditFile) -> bool:

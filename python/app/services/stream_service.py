@@ -16,5 +16,6 @@ async def prompt_generator(user_message: str, request: Request):
             # client closes connection
             break
         
+        print(f"EMITTED COMMAND: {c}")
         yield f'data: {json.dumps(command_to_json(c))}\n\n'
-    response.close()
+    # response.close()

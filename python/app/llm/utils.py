@@ -12,8 +12,8 @@ def count_tokens(text: str) -> int:
 
 async def call_requested_function(call_request, func_lookup):
     # parse function call
-    func_name = call_request.name
-    arguments = call_request.arguments
+    func_name = call_request['name']
+    arguments = call_request['arguments']
 
     if func_name not in func_lookup:
         return f"Error: Function {func_name} does not exist."
@@ -104,7 +104,9 @@ async def chunk_stream(stream):
     'tool_calls': []
     }
 
+    print("STARTING CHUNK STREAM")
     async for chunk in stream:
+        print("CHUNK")
         delta = chunk.choices[0].delta
         # Handle role updates
         if delta.role:
