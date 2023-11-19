@@ -84,14 +84,13 @@ export function Menu({ handleCommandStream, speechMessage, showPopover, setShowP
     handleCommandStream(eventSource);
   };
 
-  // useEffect(() => {
-  //   if (!speechMessage) {
-  //     // setShowPopover(false);
-  //     return;
-  //   }
-
-  //   setShowPopover(true);
-  // }, [speechMessage]);
+  useEffect(() => {
+    if (showPopover) {
+      document.onmousedown = ((e) => {
+        setShowPopover(false)
+      })
+    }
+  }, [showPopover])
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");

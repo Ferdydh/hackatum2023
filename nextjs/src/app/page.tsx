@@ -79,16 +79,11 @@ export default function Home() {
     setFileContent(fileContent);
   }
 
-  const { add, remove, first, last, size } = useQueue<Command>();
+
 
   const handleCommandStream = (eventSource: EventSource) => {
     eventSource.onmessage = (event) => {
       const newCommand = JSON.parse(event.data) as Command;
-      add(newCommand)
-      console.log(size)
-      // console.log("Command called" + newCommand.commandType)
-      // console.log(newCommand.commandArgs)
-
       processCommand(newCommand)
     }
 
@@ -99,41 +94,12 @@ export default function Home() {
     };
   };
 
-  useEffect(() => {
-    // Start processing the queue when the component mounts
-    processQueue();
-  }, []);
-
   const [speechMessage, setSpeechMessage] = useState("");
   const [showPopover, setShowPopover] = useState(false);
 
 
   const [terminalOutput, setTerminalOutput] = useState("");
   const { theme, setTheme } = useTheme();
-
-  const processQueue = () => {
-    console.log("Queue running")
-    console.log(size)
-
-    if (size === 0) {
-      // Queue is empty, do something (e.g., stop processing)
-      setTimeout(processQueue, 1000);
-      return;
-    }
-
-    const command = remove();
-
-    if (command === undefined) {
-      // Queue is empty, do something (e.g., stop processing)
-      setTimeout(processQueue, 1000);
-      return;
-    }
-
-    console.log(command.commandType)
-
-
-    setTimeout(processQueue, 1000);
-  }
 
   function processCommand(command: Command) {
     setShowPopover(false)
@@ -151,6 +117,7 @@ export default function Home() {
       case "OpenFile":
         // Cursor movement to file
         handleMoveAnimatedCursor(command.commandArgs.full_path!)
+        setFileFullPath(command.commandArgs.full_path)
         break;
 
       case "EditFile":
