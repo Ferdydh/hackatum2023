@@ -38,20 +38,18 @@ export default function Home() {
 
   // on resizing browser window
   useEffect(() => {
-    setEditorHeight(windowSize.height - terminalHeight)
-    setEditorWidth(windowSize.width - sidebarWidth)
-  }, [windowSize])
+    setEditorHeight(windowSize.height - terminalHeight);
+    setEditorWidth(windowSize.width - sidebarWidth);
+  }, [windowSize]);
 
-  const [rootFolder, setRootFolder] = useState<Directory[]>()
+  const [rootFolder, setRootFolder] = useState<Directory[]>();
 
-  const { data: rootFolderData, isLoading: rootFolderIsLoading } = api.root.get_project_directory.useQuery() // Should we make skeleton for sidebar?
+  const { data: rootFolderData, isLoading: rootFolderIsLoading } =
+    api.root.get_project_directory.useQuery(); // Should we make skeleton for sidebar?
 
   useEffect(() => {
-    setRootFolder(rootFolderData?.root)
-  }, [rootFolderData])
-
-
-
+    setRootFolder(rootFolderData?.root);
+  }, [rootFolderData]);
 
   return (
     <main className="min-h-screen w-screen items-center overflow-hidden">
@@ -81,7 +79,7 @@ export default function Home() {
             <ResizableBox
               onResize={(_, { size }) => resizeHeight(size.height)}
               handle={
-                <hr className="absolute bottom-[-37px] left-[0] right-[0] z-10 h-[10px] w-full cursor-ns-resize border-solid hover:border-r-4 hover:border-gray-400" />
+                <hr className="absolute bottom-[-10px] left-[0] right-[0] z-10 h-[10px] w-full cursor-ns-resize border-solid hover:border-r-4 hover:border-gray-400" />
               }
               className="relative border-b-2 border-solid "
               height={windowSize.height - 300}
@@ -96,5 +94,5 @@ export default function Home() {
         </ResizableBox>
       </div>
     </main>
-  )
+  );
 }

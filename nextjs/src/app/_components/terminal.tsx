@@ -11,24 +11,29 @@ export function Terminal() {
   const handleExecute = async () => {
     try {
       const result = await terminalExecuteMutation.mutateAsync({ command });
-      setOutput(result.output);
+      setOutput(
+        (prevOutput) => prevOutput + `\n$ ${command}\n${result.output}`,
+      );
+      setCommand(""); // Clear the command input after execution
     } catch (error) {
       console.error("Failed to execute command", error);
-      setOutput("Error executing command");
+      setOutput((prevOutput) => prevOutput + "\nError executing command");
     }
   };
 
   return (
-    <div className="h-20vh mt-8">
+    <div>
       <Label className="mx-3 text-xl">Terminal</Label>
-      <div className="ml-4">
-        <pre>{output}</pre>
+      <div className=" no-scrollbar ml-4 max-h-[20vh] overflow-y-auto">
+        <div>
+          <pre>{output}</pre>
+        </div>
         <input
           type="text"
           value={command}
           onChange={(e) => setCommand(e.target.value)}
           placeholder="_"
-          className=" w-full bg-transparent focus:outline-none"
+          className="w-full bg-transparent focus:outline-none"
           onKeyDown={(e) => e.key === "Enter" && handleExecute()}
         />
       </div>
