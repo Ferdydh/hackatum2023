@@ -157,8 +157,9 @@ async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject, p
             temperature=0.0,
             stream=True
         )
+
+        # we're completing the response chunk by chunk, and pass a preview to the frontend/consumer
         for partial_msg in chunk_stream(stream):
-            # we're completing the response chunk by chunk, and pass a preview to the frontend/consumer
             if preview_handler:
                 try:
                     yield preview_handler(partial_msg)

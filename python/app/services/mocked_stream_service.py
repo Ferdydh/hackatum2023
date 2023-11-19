@@ -3,10 +3,7 @@ from app.models import NewFile, OpenFile, EditFile, File, Folder, Directory, Ter
 
 async def get_directory() -> list[Directory]:
     return [
-        Folder(full_path="src", name="src", sub_directories=[
-            File(full_path="src/hello.py", name="hello.py")
-            ]
-        ),
+        File(full_path="src/hello.py", name="hello.py"),
         File(full_path="README.md", name="README.md"),
     ]
 
@@ -22,7 +19,7 @@ async def edit_file(edit_file: EditFile) -> bool:
 
 async def terminal_execute(terminal_execute: TerminalExecute) -> TerminalResult:
     return TerminalResult(
-        output="hello, world\nhello, cats\nhello, dogs\nhello, furkan\nhello, jiwoo\nhello, jay\nhello, ferdy\nand so on",
+        output="hello, world",
         new_project_directory=[
             File(full_path="terminal_update.py", name="terminal_update.py"),
             Folder(full_path=terminal_execute.command, name=terminal_execute.command, sub_directories=[]),
