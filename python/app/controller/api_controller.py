@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app.services import api_service, mocked_service
-from app.models import NewFile, RenameFile, DeleteFile, OpenFile, EditFile, TerminalExecute, File, Folder, Directory, TerminalResult
+from app.models import NewFile, OpenFile, EditFile, TerminalExecute, File, Folder, Directory, TerminalResult
 
 router = APIRouter()
 
@@ -25,16 +25,6 @@ async def get_directory_controller() -> list[Directory]:
 async def new_file_controller(new_file: NewFile) -> list[Directory]:
     result = await SERVICE.new_file(new_file)
     return result
-
-# @router.post("/rename_file")
-# async def rename_file_controller(rename_file: RenameFile) -> list[Directory]:
-#     result = await SERVICE.rename_file(rename_file)
-#     return result
-
-# @router.post("/delete_file")
-# async def delete_file_controller(delete_file: DeleteFile) -> list[Directory]:
-#     result = await SERVICE.delete_file(delete_file)
-#     return result
 
 @router.post("/open_file")
 async def open_file_controller(open_file: OpenFile) -> str:

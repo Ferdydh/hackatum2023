@@ -8,6 +8,8 @@ class UserProject:
         pass
     def get_current_file(self) -> str:
         pass
+    def read_current_file(self) -> str:
+        pass
 
     # tools for AI
     async def new_file(self, full_path: str) -> str:
@@ -49,6 +51,9 @@ class FakeProject(UserProject):
     
     def get_current_file(self):
         return self.current_file
+    
+    def read_current_file(self) -> str:
+        return self.files[self.current_file]
 
     # tools for AI
     async def new_file(self, full_path: str):
@@ -118,7 +123,12 @@ class FakeProject(UserProject):
         return "success"
     
     async def execute_command(self, command: str):
-        return "success"
+        return command+"\nsuccess"
+    
+
+global_messages = []
+global_state = FakeProject()
+
 
 class remove_lines(BaseModel):
     """

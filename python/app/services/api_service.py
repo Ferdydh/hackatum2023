@@ -4,6 +4,7 @@ import aiofiles.os
 import logging
 
 from app.models import Directory, File, Folder
+from app.llm.userproject import global_messages, global_state
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.CRITICAL)

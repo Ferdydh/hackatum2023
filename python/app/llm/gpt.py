@@ -1,7 +1,9 @@
+import json
 from dotenv import load_dotenv
 load_dotenv(override=True)
 from .utils import schema_to_openai_func, call_requested_function, register_tool, chunk_stream, add_line_numbers
 from .userproject import UserProject, FakeProject
+from app.models import NewFile, DirectoryUpdate, OpenFile, EditFile, TerminalExecute, TerminalUpdate, SpeechBubble, OpenSettings, ToggleTheme
 from openai import AsyncOpenAI
 import re
 
@@ -102,6 +104,25 @@ def parse_code(input_string):
     else:
         # Return None or raise an error if no match is found
         return None
+    
+def parse_preview_code(input_string):
+    # like above, but works with any prefix of a valid code block, i.e. closing ``` is optional
+    pattern = r'```\s*(INSERT_AT_LINE|REPLACE_AT_LINE)\((\d+)(?:,(\d+))?\)\n(.*?)\s*'
+
+    # Search for the pattern in the input string
+    match = re.search(pattern, input_string, re.DOTALL)
+
+    if match:
+        # Extract the matched groups
+        prefix = match.group(1)
+        start_line = int(match.group(2))
+        # For REPLACE_AT_LINE, extract the end line, otherwise None
+        end_line = int(match.group(3)) if match.group(3) else None
+        code = match.group(4).strip()
+        return prefix, start_line, end_line, code
+    else:
+        # Return None or raise an error if no match is found
+        return None
 
 async def prompt_stream(messages: list, prompt: str, state: UserProject):
     tools, func_lookup = state.register_all_tools()
@@ -143,7 +164,9 @@ async def prompt_stream(messages: list, prompt: str, state: UserProject):
 
 
 
-async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject, preview_handler):
+
+
+async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject):
     tools, func_lookup = state.register_all_tools()
     messages.append({"role": "user", "content": prompt})
     
@@ -159,12 +182,29 @@ async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject, p
         )
 
         # we're completing the response chunk by chunk, and pass a preview to the frontend/consumer
-        for partial_msg in chunk_stream(stream):
-            if preview_handler:
-                try:
-                    yield preview_handler(partial_msg)
-                except:
-                    pass
+        i_think_this_msg_is_just_text = False
+        async for partial_msg in chunk_stream(stream):
+            try:
+                if len(partial_msg['content']) > 50:  # should be enough to tell if it's a parse code or not
+                    if parse_preview_code(partial_msg['content']):
+                        if i_think_this_msg_is_just_text:
+                            # but it turns out it wasn't, so we "undo" the mistake by yielding an empty speech bubble to the frontend
+                            yield SpeechBubble(speech_message="") # speech bubble empty
+
+                        f, s, e, code = parse_preview_code(partial_msg['content'])
+                        if f=="INSERT_AT_LINE":
+                            file_content_preview = await state.preview_insert_lines(s, code) + "..."
+                            yield EditFile(file_contents=file_content_preview) #TODO edit file command to frontend
+                        elif f=="REPLACE_AT_LINE":
+                            file_content_preview = await state.preview_replace_lines(s, e, code) + "..."
+                            yield EditFile(file_contents=file_content_preview)
+                    else:
+                        # at this point, probably an actual message to show user
+                        i_think_this_msg_is_just_text = True
+                        yield SpeechBubble(speech_message=partial_msg['content'] + "...")
+            except:
+                # partial message can cause issues and stuff, not a big deal
+                pass
 
 
         new_msg = partial_msg
@@ -175,18 +215,33 @@ async def prompt_stream_chunk(messages: list, prompt: str, state: UserProject, p
                 f, s, e, code = parse_code(new_msg.content)
                 if f=="INSERT_AT_LINE":
                     await state.insert_lines(s, code)
-                    yield (f"Inserted at line {s}: {code}")
+                    yield EditFile(file_contents=state.read_current_file())
                 elif f=="REPLACE_AT_LINE":
                     await state.replace_lines(s, e, code)
-                    yield (f"Replaced lines {s} to {e} with {code}")
+                    yield EditFile(file_contents=state.read_current_file())
             else:
-                yield (new_msg)
+                yield SpeechBubble(speech_message=new_msg.content)
         if new_msg.tool_calls:
             for tool_call in new_msg.tool_calls:
                 f = tool_call.function
-                yield (f"Calling function: {f.name}, args = {f.arguments}")
+                # yield (f"Calling function: {f.name}, args = {f.arguments}")
                 ret_val = await call_requested_function(f, func_lookup)
-                yield (f"Returned: {ret_val}")
+                # yield (f"Returned: {ret_val}")
+                if not ret_val.startswith("Error"):
+                    a = json.loads(f.arguments)
+                    # generate commands
+                    if f.name == "new_file":
+                        yield NewFile(full_path=a['full_path'])
+                    if f.name == "open_file":
+                        yield OpenFile(full_path=a['full_path'])
+                    if f.name == "remove_lines":
+                        yield EditFile(file_contents=state.read_current_file())
+                    if f.name == "execute_command":
+                        yield TerminalExecute()
+                        yield TerminalUpdate(terminal_contents=ret_val)
+                    # if f.name == "open_settings":
+                    # if f.name == "toggle_theme":
+
 
                 # insert the return value into the message
                 messages.append({"role": "tool", "content": ret_val, "tool_call_id": tool_call.id})

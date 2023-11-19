@@ -1,21 +1,13 @@
 import os
+import json
+import asyncio
+from fastapi import Request
+from fastapi.responses import StreamingResponse
 from app.models import NewFile, OpenFile, EditFile, File, Folder, Directory, TerminalExecute, TerminalResult
 
-async def get_directory() -> list[Directory]:
-    return [
-        File(full_path="src/hello.py", name="hello.py"),
-        File(full_path="README.md", name="README.md"),
-    ]
 
-async def new_file(new_file: NewFile) -> list[Directory]:
-    base_name = os.path.basename(new_file.full_path)
-    return [File(full_path=new_file.full_path, name=new_file.full_path.split('/')[-1])]
 
-async def open_file(open_file: OpenFile) -> str:
-    return f"import os\n\nprint('hello, {open_file.full_path}')"
 
-async def edit_file(edit_file: EditFile) -> bool:
-    return True
 
 async def terminal_execute(terminal_execute: TerminalExecute) -> TerminalResult:
     return TerminalResult(
@@ -25,3 +17,15 @@ async def terminal_execute(terminal_execute: TerminalExecute) -> TerminalResult:
             Folder(full_path=terminal_execute.command, name=terminal_execute.command, sub_directories=[]),
         ]
     )
+
+
+async def prompt_generator(user_message: str, request: Request):
+    new_message = {"role": "assistant", "message": ""}
+    response = "ducks give no fucks " * 10
+    for i in range(len(response)):
+        # If client closes connection, stop sending events
+        if await request.is_disconnected():
+            break
+        new_message['message'] = response[:i+1]
+        yield f"data: {json.dumps(new_message)}\n\n"
+        await asyncio.sleep(0.01)
