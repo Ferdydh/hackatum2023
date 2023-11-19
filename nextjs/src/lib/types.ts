@@ -19,11 +19,11 @@ export type CommandType = "NewFile" | "DirectoryUpdate" |
 export type Command = {
   commandType: CommandType,
   commandArgs: {
-    directories: Directory[]
-    full_path: string, // New File, Open file
-    file_contents: string, // Edit File
-    speech_message: string, // Speech Bubble
-    terminal_contents: string, // Terminal update
+    directories?: Directory[]
+    full_path?: string, // New File, Open file
+    file_contents?: string, // Edit File
+    speech_message?: string, // Speech Bubble
+    terminal_contents?: string, // Terminal update
 
   }
 }

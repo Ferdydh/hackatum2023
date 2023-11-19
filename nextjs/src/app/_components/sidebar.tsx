@@ -34,11 +34,11 @@ export function Sidebar({
   const [isAddingNewFile, setAddingNewFile] = useState(false);
 
   // TODO skeleton?
-  // if (!root) {
-  //   root = mock_project_structure;
-  // }
+  if (!root) {
+    root = mock_project_structure;
+  }
 
-  root = mock_project_structure;
+  // root = mock_project_structure;
 
   return (
     <div className={className}>

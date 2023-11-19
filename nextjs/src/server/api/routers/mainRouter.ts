@@ -58,8 +58,8 @@ export const mainRouter = createTRPCRouter({
     .input(z.object({ new_contents: z.string() }))
     .mutation(async ({ input }) => {
       const { data } = await axios.post<boolean>(BACKEND_URI + "edit_file", {
-        full_path: input.full_path,
-        new_contents: input.new_contents,
+        // full_path: input.full_path,
+        file_contents: input.new_contents,
       });
 
       return {

@@ -9,17 +9,24 @@ interface FileEditorProps extends React.HTMLAttributes<HTMLDivElement> {
   handleSaveFile: (fileContent: string) => void;
 }
 
-export function FileEditor({
-  fileContent,
-  className,
-  fileFullPath,
-}: FileEditorProps) {
+export function FileEditor({ fileContent, className, fileFullPath, handleSaveFile }: FileEditorProps) {
   const { theme } = useTheme();
   const [editorTheme, setEditorTheme] = useState("light");
 
   useEffect(() => {
     setEditorTheme(theme === "dark" ? "vs-dark" : "light");
   }, [theme]);
+
+
+  const extension = fileFullPath?.split(".")[-1]!
+
+  const programmingLanguages = {
+    "py": "python",
+    "js": "javascript",
+    "jsx": "javascript",
+    "ts": "typescript",
+    "tsx": "typescript",
+  }[extension] || "javascript"
 
   return (
     <div className="h-full min-h-full w-full overflow-hidden">
@@ -28,12 +35,13 @@ export function FileEditor({
       {/* TODO buttons to save */}
 
       <Editor
-        defaultLanguage="javascript"
+        defaultLanguage={programmingLanguages}
         defaultValue={duckAscii}
-        options={{ readOnly: !fileContent }}
+        options={{ readOnly: !fileFullPath }}
         theme={editorTheme}
         className="mt-2"
         value={fileContent}
+        onChange={(value) => value !== undefined && handleSaveFile(value)}
       />
     </div>
   );

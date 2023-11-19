@@ -10,8 +10,8 @@ import { useEffect, useState } from "react";
 import { useWindowSize } from "./_hooks/useWindowSize";
 import { api } from "~/trpc/react";
 import { AnimatedCursor } from "./_components/animated-cursor";
-import { useQueue } from "@uidotdev/usehooks";
 import { useTheme } from "next-themes";
+import { useQueue } from 'react-use';
 
 export default function Home() {
   const [editorWidth, setEditorWidth] = useState(0);
@@ -67,7 +67,7 @@ export default function Home() {
   }
 
   const mutationEditFile = api.root.edit_file.useMutation({
-    onSuccess: ({ success }) => {},
+    onSuccess: ({ success }) => { },
   });
 
   function handleSaveFile(fileContent: string) {
@@ -83,9 +83,12 @@ export default function Home() {
 
   const handleCommandStream = (eventSource: EventSource) => {
     eventSource.onmessage = (event) => {
-      const newCommand = event.data as Command;
-      commandQueue.add(newCommand);
-    };
+      const newCommand = JSON.parse(event.data) as Command;
+      commandQueue.add(newCommand)
+      // console.log(commandQueue.size)
+      // console.log("Command called" + newCommand.commandType)
+      // console.log(newCommand.commandArgs)
+    }
 
     eventSource.onerror = (error) => {
       // Call backend and tell where we send an interruption
@@ -96,6 +99,35 @@ export default function Home() {
 
   useEffect(() => {
     // Start processing the queue when the component mounts
+
+    // test TODO change
+    commandQueue.add({
+      commandType: "SpeechBubble",
+      commandArgs: {
+        speech_message: "Text"
+      }
+    })
+
+    commandQueue.add({
+      commandType: "SpeechBubble",
+      commandArgs: {
+        speech_message: "Text"
+      }
+    })
+    commandQueue.add({
+      commandType: "SpeechBubble",
+      commandArgs: {
+        speech_message: "Text"
+      }
+    })
+    commandQueue.add({
+      commandType: "SpeechBubble",
+      commandArgs: {
+        speech_message: "Text"
+      }
+    })
+
+
     processQueue();
   }, []);
 
@@ -104,11 +136,15 @@ export default function Home() {
   const { theme, setTheme } = useTheme();
 
   const processQueue = () => {
+    // console.log("Queue running")
+    // console.log(commandQueue.size)
+
     if (commandQueue.size === 0) {
       // Queue is empty, do something (e.g., stop processing)
       setTimeout(processQueue, 1000);
       return;
     }
+
 
     const command = commandQueue.remove();
 
@@ -118,6 +154,8 @@ export default function Home() {
       return;
     }
 
+    console.log(command.commandType)
+
     switch (command.commandType) {
       case "NewFile":
         // Cursor Movement to new file
@@ -126,12 +164,12 @@ export default function Home() {
 
       case "DirectoryUpdate":
         // Set the new rootdir
-        setRootFolder(command.commandArgs.directories);
+        setRootFolder(command.commandArgs.directories!)
         break;
 
       case "OpenFile":
         // Cursor movement to file
-        handleMoveAnimatedCursor(command.commandArgs.full_path);
+        handleMoveAnimatedCursor(command.commandArgs.full_path!)
         break;
 
       case "EditFile":
@@ -146,12 +184,12 @@ export default function Home() {
 
       case "TerminalUpdate":
         // set terminal content
-        setTerminalOutput(command.commandArgs.terminal_contents);
+        setTerminalOutput(command.commandArgs.terminal_contents!)
         break;
 
       case "SpeechBubble":
         // Set speech message state
-        setSpeechMessage(command.commandArgs.speech_message);
+        setSpeechMessage(command.commandArgs.speech_message!)
         break;
 
       case "OpenSettings":
@@ -169,7 +207,9 @@ export default function Home() {
         console.error("Unkown command type");
         break;
     }
-  };
+
+    setTimeout(processQueue, 1000);
+  }
 
   const [targetX, setTargetX] = useState(0);
   const [targetY, setTargetY] = useState(0);

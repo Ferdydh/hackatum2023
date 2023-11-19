@@ -108,7 +108,8 @@ function FileComponent({ file, handleOpenFile, depth }: FileComponentProps) {
         id={file.full_path}
       >
         <FileIcon size={20} className="mr-2" />
-        {file.name}
+        {file.full_path}
+        {/* {file.name} TODO*/}
       </Button>
     </div>
   );

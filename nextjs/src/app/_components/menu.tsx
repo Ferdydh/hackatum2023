@@ -49,6 +49,7 @@ import {
 } from "@/components/ui/select";
 
 import { useTheme } from "next-themes";
+import { AnimatedCursor } from "./animated-cursor";
 
 interface MenuProps {
   handleCommandStream: (eventSource: EventSource) => void;
@@ -105,10 +106,10 @@ export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
         />
         <Label className="text-xl">Ducky</Label>
       </div>
-      <Button variant="outline">
+      {/* <Button variant="outline">
         <Save size={20} className="mr-2" />
         Save
-      </Button>
+      </Button> */}
 
       <Popover>
         <PopoverTrigger asChild>
