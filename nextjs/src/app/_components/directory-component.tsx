@@ -16,21 +16,23 @@ import { File as FileIcon } from "lucide-react";
 
 interface DirectoryComponentProps {
   dir: Directory;
+  handleOpenFile: (fullPath: string) => void
 }
 
-export function DirectoryComponent({ dir }: DirectoryComponentProps) {
+export function DirectoryComponent({ dir, handleOpenFile }: DirectoryComponentProps) {
   const isFolder = (dir as Folder).sub_directories;
   return isFolder ? (
-    <FolderComponent folder={dir as Folder} />
+    <FolderComponent folder={dir as Folder} handleOpenFile={handleOpenFile} />
   ) : (
-    <FileComponent file={dir as File} />
+    <FileComponent file={dir as File} handleOpenFile={handleOpenFile} />
   );
 }
 
 interface FolderComponentProps {
   folder: Folder;
+  handleOpenFile: (fullPath: string) => void
 }
-export function FolderComponent({ folder }: FolderComponentProps) {
+export function FolderComponent({ folder, handleOpenFile }: FolderComponentProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -59,7 +61,7 @@ export function FolderComponent({ folder }: FolderComponentProps) {
       </div>
       <CollapsibleContent className="space-y-2">
         {folder.sub_directories.map((dir) => {
-          return <DirectoryComponent dir={dir} />;
+          return <DirectoryComponent dir={dir} handleOpenFile={handleOpenFile} />;
         })}
       </CollapsibleContent>
     </Collapsible>
@@ -68,13 +70,15 @@ export function FolderComponent({ folder }: FolderComponentProps) {
 
 interface FileComponentProps {
   file: File;
+  handleOpenFile: (fullPath: string) => void
 }
-function FileComponent({ file }: FileComponentProps) {
+function FileComponent({ file, handleOpenFile }: FileComponentProps) {
   return (
     <Button
       variant="ghost"
       size="sm"
       className="w-full justify-start font-normal"
+      onClick={() => handleOpenFile(file.full_path)}
     >
       <FileIcon size={20} className="mr-2" />
       {file.name}
