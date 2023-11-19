@@ -1,22 +1,21 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
+
 import {
   Menubar,
-  MenubarCheckboxItem,
   MenubarContent,
-  MenubarItem,
   MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
 
-import { SlidersHorizontal, LogOut } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { SlidersHorizontal, LogOut, Save } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -32,7 +31,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -41,6 +39,36 @@ import { useTheme } from "next-themes";
 
 export function Menu() {
   const { theme, setTheme } = useTheme();
+  const [showPopover, setShowPopover] = useState(false);
+  const [prompt, setPrompt] = useState("");
+  const [messages, setMessages] = useState("");
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+      e.preventDefault(); // Prevent default to avoid any form submission
+    }
+  };
+
+  const handleSubmit = () => {
+    const url = "http://192.168.137.17:8002/v1/stream_api/prompt";
+    const data = { user_message: prompt };
+
+    const eventSource = new EventSource(
+      url + "?user_message=" + encodeURIComponent(data.user_message),
+    );
+
+    eventSource.onmessage = (event) => {
+      setShowPopover(true);
+      const newMessages = JSON.parse(event.data).message;
+      setMessages(newMessages);
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("EventSource failed:", error);
+      eventSource.close();
+    };
+  };
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -56,12 +84,28 @@ export function Menu() {
         />
         <Label className="text-xl">Ducky</Label>
       </div>
+      <Button variant="outline">
+        <Save size={20} className="mr-2" />
+        Save
+      </Button>
 
-      <Input
-        type="prompt"
-        placeholder="What can I do for you?"
-        className="w-1/2"
-      />
+      <Popover>
+        <PopoverTrigger asChild>
+          <Input
+            type="text"
+            placeholder="What can I do for you?"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            onKeyDown={handleKeyDown} // Use onKeyDown event here
+            className="w-1/2"
+          />
+        </PopoverTrigger>
+        {showPopover && (
+          <PopoverContent>
+            <div>{messages}</div>
+          </PopoverContent>
+        )}
+      </Popover>
 
       <div className="flex items-center">
         <MenubarMenu>
