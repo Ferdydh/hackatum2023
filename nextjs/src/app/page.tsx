@@ -48,8 +48,31 @@ export default function Home() {
     api.root.get_project_directory.useQuery(); // Should we make skeleton for sidebar?
 
   useEffect(() => {
-    setRootFolder(rootFolderData?.root);
-  }, [rootFolderData]);
+    setRootFolder(rootFolderData?.root)
+  }, [rootFolderData])
+
+  const [fileContent, setFileContent] = useState<string>()
+  const [fileFullPath, setFileFullPath] = useState<string>()
+
+  const mutationOpenFile = api.root.open_file.useMutation({
+    onSuccess: ({ file_content }) => {
+      setFileContent(file_content)
+    }
+  })
+
+  function handleOpenFile(fullPath: string) {
+    mutationOpenFile.mutate({ "full_path": fullPath })
+    setFileFullPath(fullPath)
+  }
+
+  const mutationEditFile = api.root.edit_file.useMutation({ onSuccess: ({ success }) => { } })
+
+  function handleSaveFile(fileContent: string) {
+    // Call edit file
+    mutationEditFile.mutate({ "new_contents": fileContent, "full_path": fileFullPath! })
+    setFileContent(fileContent)
+  }
+
 
   return (
     <main className="min-h-screen w-screen items-center overflow-hidden">
@@ -66,7 +89,7 @@ export default function Home() {
           width={300}
           axis="x"
         >
-          <Sidebar root={rootFolder} className="w-full"></Sidebar>
+          <Sidebar root={rootFolder} setRootFolder={setRootFolder} handleOpenFile={handleOpenFile} className="w-full"></Sidebar>
         </ResizableBox>
 
         <ResizableBox
@@ -85,7 +108,7 @@ export default function Home() {
               height={windowSize.height - 300}
               axis="y"
             >
-              <FileEditor></FileEditor>
+              <FileEditor fileFullPath={fileFullPath!} fileContent={fileContent!} handleSaveFile={handleSaveFile}></FileEditor>
             </ResizableBox>
             <ResizableBox height={terminalHeight} axis="y">
               <Terminal></Terminal>
