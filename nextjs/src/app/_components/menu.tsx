@@ -54,10 +54,11 @@ import { AnimatedCursor } from "./animated-cursor";
 interface MenuProps {
   handleCommandStream: (eventSource: EventSource) => void;
   speechMessage: string;
+  setShowPopover: (x: boolean) => void,
+  showPopover: boolean,
 }
-export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
+export function Menu({ handleCommandStream, speechMessage, showPopover, setShowPopover }: MenuProps) {
   const { theme, setTheme } = useTheme();
-  const [showPopover, setShowPopover] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [isMrDuckySelected, setIsMrDuckySelected] = useState(false);
 
@@ -83,14 +84,14 @@ export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
     handleCommandStream(eventSource);
   };
 
-  useEffect(() => {
-    if (!speechMessage) {
-      // setShowPopover(false);
-      return;
-    }
+  // useEffect(() => {
+  //   if (!speechMessage) {
+  //     // setShowPopover(false);
+  //     return;
+  //   }
 
-    setShowPopover(true);
-  }, [speechMessage]);
+  //   setShowPopover(true);
+  // }, [speechMessage]);
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -111,7 +112,7 @@ export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
         Save
       </Button> */}
 
-      <Popover>
+      <Popover open={showPopover}>
         <PopoverTrigger asChild>
           <Input
             type="text"
@@ -122,11 +123,9 @@ export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
             className="w-1/2"
           />
         </PopoverTrigger>
-        {showPopover && (
-          <PopoverContent>
-            <div>{speechMessage}</div>
-          </PopoverContent>
-        )}
+        <PopoverContent>
+          <div>{speechMessage}</div>
+        </PopoverContent>
       </Popover>
 
       <div className="flex items-center">

@@ -79,15 +79,17 @@ export default function Home() {
     setFileContent(fileContent);
   }
 
-  const commandQueue = useQueue<Command>([]);
+  const { add, remove, first, last, size } = useQueue<Command>();
 
   const handleCommandStream = (eventSource: EventSource) => {
     eventSource.onmessage = (event) => {
       const newCommand = JSON.parse(event.data) as Command;
-      commandQueue.add(newCommand)
-      // console.log(commandQueue.size)
+      add(newCommand)
+      console.log(size)
       // console.log("Command called" + newCommand.commandType)
       // console.log(newCommand.commandArgs)
+
+      processCommand(newCommand)
     }
 
     eventSource.onerror = (error) => {
@@ -99,54 +101,27 @@ export default function Home() {
 
   useEffect(() => {
     // Start processing the queue when the component mounts
-
-    // test TODO change
-    commandQueue.add({
-      commandType: "SpeechBubble",
-      commandArgs: {
-        speech_message: "Text"
-      }
-    })
-
-    commandQueue.add({
-      commandType: "SpeechBubble",
-      commandArgs: {
-        speech_message: "Text"
-      }
-    })
-    commandQueue.add({
-      commandType: "SpeechBubble",
-      commandArgs: {
-        speech_message: "Text"
-      }
-    })
-    commandQueue.add({
-      commandType: "SpeechBubble",
-      commandArgs: {
-        speech_message: "Text"
-      }
-    })
-
-
     processQueue();
   }, []);
 
   const [speechMessage, setSpeechMessage] = useState("");
+  const [showPopover, setShowPopover] = useState(false);
+
+
   const [terminalOutput, setTerminalOutput] = useState("");
   const { theme, setTheme } = useTheme();
 
   const processQueue = () => {
-    // console.log("Queue running")
-    // console.log(commandQueue.size)
+    console.log("Queue running")
+    console.log(size)
 
-    if (commandQueue.size === 0) {
+    if (size === 0) {
       // Queue is empty, do something (e.g., stop processing)
       setTimeout(processQueue, 1000);
       return;
     }
 
-
-    const command = commandQueue.remove();
+    const command = remove();
 
     if (command === undefined) {
       // Queue is empty, do something (e.g., stop processing)
@@ -156,6 +131,12 @@ export default function Home() {
 
     console.log(command.commandType)
 
+
+    setTimeout(processQueue, 1000);
+  }
+
+  function processCommand(command: Command) {
+    setShowPopover(false)
     switch (command.commandType) {
       case "NewFile":
         // Cursor Movement to new file
@@ -189,6 +170,7 @@ export default function Home() {
 
       case "SpeechBubble":
         // Set speech message state
+        setShowPopover(true)
         setSpeechMessage(command.commandArgs.speech_message!)
         break;
 
@@ -208,7 +190,6 @@ export default function Home() {
         break;
     }
 
-    setTimeout(processQueue, 1000);
   }
 
   const [targetX, setTargetX] = useState(0);
@@ -229,6 +210,8 @@ export default function Home() {
 
       <div>
         <Menu
+          showPopover={showPopover}
+          setShowPopover={setShowPopover}
           handleCommandStream={handleCommandStream}
           speechMessage={speechMessage}
         />
