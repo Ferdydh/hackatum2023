@@ -50,12 +50,7 @@ export function Sidebar({
           <Button variant="ghost" size="icon">
             <FolderPlus />
           </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setAddingNewFile(true)}
-          >
+          <Button id="file-add" variant="ghost" size="icon" onClick={() => setAddingNewFile(true)}>
             <FilePlus />
           </Button>
         </div>

@@ -35,6 +35,7 @@ export function Terminal() {
           placeholder="_"
           className="w-full bg-transparent focus:outline-none"
           onKeyDown={(e) => e.key === "Enter" && handleExecute()}
+          id="terminal"
         />
       </div>
     </div>

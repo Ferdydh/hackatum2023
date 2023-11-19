@@ -105,6 +105,7 @@ function FileComponent({ file, handleOpenFile, depth }: FileComponentProps) {
         size="sm"
         className="w-full justify-start font-normal"
         onClick={() => handleOpenFile(file.full_path)}
+        id={file.full_path}
       >
         <FileIcon size={20} className="mr-2" />
         {file.name}

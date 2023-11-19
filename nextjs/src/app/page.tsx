@@ -9,8 +9,7 @@ import { ResizableBox } from "react-resizable";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "./_hooks/useWindowSize";
 import { api } from "~/trpc/react";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { AnimatedCursor } from "./_components/animated-cursor";
 
 export default function Home() {
   const [editorWidth, setEditorWidth] = useState(0);
@@ -80,6 +79,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen w-screen items-center overflow-hidden">
+      <AnimatedCursor command={{ commandType: "OpenFile", full_path: "src/hello.py" }} />
+
       <div>
         <Menu />
       </div>
@@ -107,7 +108,6 @@ export default function Home() {
           height={windowSize.height - 160}
         >
           <>
-            {/** 150 is the header height */}
             <ResizableBox
               onResize={(_, { size }) => resizeHeight(size.height)}
               handle={

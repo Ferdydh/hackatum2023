@@ -26,7 +26,7 @@ export function FileEditor({ fileContent, className, fileFullPath }: FileEditorP
       <Editor
         defaultLanguage="javascript"
         defaultValue={duckAscii}
-        options={{ readOnly: true }}
+        options={{ readOnly: !fileContent }}
         theme={editorTheme}
         className="mt-2"
         value={fileContent}
@@ -36,9 +36,10 @@ export function FileEditor({ fileContent, className, fileFullPath }: FileEditorP
   );
 }
 
-const duckAscii = `READONLY: Open a file to start editing
+const duckAscii = `READONLY MODE
+Tip: Open a file to start editing
 
-,----,
+     ,----,
 ___.\`      \`,
 \`===  D     :
   \`'.      .'
