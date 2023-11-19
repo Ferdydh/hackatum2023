@@ -26,17 +26,17 @@ from pydantic import BaseModel, Field
 
 # Command Arguments
 class NewFile(BaseModel):
-    '''Create a new file, returns true if successful'''
+    '''Create a new file, returns the updated state of the project directory'''
     full_path: str
 
-# class RenameFile(BaseModel):
-#     '''Rename a file, returns true if successful'''
-#     old_full_path: str
-#     new_full_path: str
+class RenameFile(BaseModel):
+    '''Rename a file, returns the updated state of the project directory'''
+    old_full_path: str
+    new_full_path: str
 
-# class DeleteFile(BaseModel):
-#     '''Delete a file, returns true if successful'''
-#     full_path: str
+class DeleteFile(BaseModel):
+    '''Delete a file, returns the updated state of the project directory'''
+    full_path: str
 
 class OpenFile(BaseModel):
     '''Open a file, returns the full contents of the file as str'''
