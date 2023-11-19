@@ -14,7 +14,7 @@ export type Directory = File | Folder
 export type CommandType = "NewFile" | "DirectoryUpdate" |
   "OpenFile" | "EditFile" |
   "TerminalExecute" | "SpeechBubble" | "TerminalUpdate" |
-  "OpenSettings" | "ToggleDarkMode"
+  "OpenSettings" | "ToggleTheme"
 
 export type Command = {
   commandType: CommandType,

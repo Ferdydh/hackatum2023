@@ -56,8 +56,10 @@ interface MenuProps {
   speechMessage: string;
   setShowPopover: (x: boolean) => void,
   showPopover: boolean,
+  selectedAvatar: string,
+  setSelectedAvatar: (x: string) => void,
 }
-export function Menu({ handleCommandStream, speechMessage, showPopover, setShowPopover }: MenuProps) {
+export function Menu({ handleCommandStream, speechMessage, showPopover, selectedAvatar, setSelectedAvatar, setShowPopover }: MenuProps) {
   const { theme, setTheme } = useTheme();
   const [prompt, setPrompt] = useState("");
   const [isMrDuckySelected, setIsMrDuckySelected] = useState(false);
@@ -69,7 +71,6 @@ export function Menu({ handleCommandStream, speechMessage, showPopover, setShowP
     }
   };
 
-  const [selectedAvatar, setSelectedAvatar] = useState("ducky"); // State to track selected avatar
 
   const avatarImageSrc = selectedAvatar === "ducky" ? Ducky : MrDucky;
 

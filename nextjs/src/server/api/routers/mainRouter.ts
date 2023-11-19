@@ -6,8 +6,8 @@ import axios from "axios";
 import qs from "qs";
 
 const LOCAL_BACKEND_URI = "http://python:8002/v1/api/";
-const BACKEND_URI = "http://192.168.137.17:8002/v1/api/";
-const STREAM_BACKEND_URI = "http://192.168.137.17:8002/v1/stream_api/";
+const BACKEND_URI = "http://localhost:8002/v1/api/";
+const STREAM_BACKEND_URI = "http://localhost:8002/v1/stream_api/";
 
 export const mainRouter = createTRPCRouter({
   get_project_directory: publicProcedure.query(async () => {

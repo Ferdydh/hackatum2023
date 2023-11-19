@@ -79,6 +79,7 @@ export default function Home() {
     setFileContent(fileContent);
   }
 
+  const [selectedAvatar, setSelectedAvatar] = useState("ducky"); // State to track selected avatar
 
 
   const handleCommandStream = (eventSource: EventSource) => {
@@ -146,7 +147,7 @@ export default function Home() {
         handleMoveAnimatedCursor("settings");
         break;
 
-      case "ToggleDarkMode":
+      case "ToggleTheme":
         // Cursor to Toggle Dark Mode and toggle it
         handleMoveAnimatedCursor("dark-mode-toggle");
         setTheme(theme === "light" ? "dark" : "light");
@@ -181,6 +182,8 @@ export default function Home() {
           setShowPopover={setShowPopover}
           handleCommandStream={handleCommandStream}
           speechMessage={speechMessage}
+          selectedAvatar={selectedAvatar}
+          setSelectedAvatar={setSelectedAvatar}
         />
       </div>
       <div className="flex ">
