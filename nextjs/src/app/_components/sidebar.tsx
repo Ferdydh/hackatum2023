@@ -61,7 +61,7 @@ export function Sidebar({
         </div>
       </div>
       <ScrollArea className="h-[calc(100vh-150px)]">
-        <div className="pl-4">
+        <div>
           {root.map((directory, i) => (
             <div key={`${directory.full_path}-${i}`}>
               <DirectoryComponent

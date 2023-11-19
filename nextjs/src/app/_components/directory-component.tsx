@@ -58,7 +58,7 @@ export function FolderComponent({
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
-        className="w-[350px] space-y-1"
+        className="w-[250px] space-y-1"
       >
         <div className="flex items-center">
           <CollapsibleTrigger asChild>

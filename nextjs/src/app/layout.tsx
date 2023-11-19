@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Ducky",
+  title: "Ducky - Next Gen AI Coding",
   description: "The Next Gen Code Editor",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
