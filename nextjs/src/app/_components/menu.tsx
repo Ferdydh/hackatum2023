@@ -38,11 +38,14 @@ import {
 
 import { useTheme } from "next-themes";
 
-export function Menu() {
+interface MenuProps {
+  handleCommandStream: (eventSource: EventSource) => void,
+  speechMessage: string,
+}
+export function Menu({ handleCommandStream, speechMessage }: MenuProps) {
   const { theme, setTheme } = useTheme();
   const [showPopover, setShowPopover] = useState(false);
   const [prompt, setPrompt] = useState("");
-  const [messages, setMessages] = useState("");
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -63,17 +66,17 @@ export function Menu() {
       url + "?user_message=" + encodeURIComponent(data.user_message),
     );
 
-    eventSource.onmessage = (event) => {
-      setShowPopover(true);
-      const newMessages = JSON.parse(event.data).message;
-      setMessages(newMessages);
-    };
-
-    eventSource.onerror = (error) => {
-      console.error("EventSource failed:", error);
-      eventSource.close();
-    };
+    handleCommandStream(eventSource)
   };
+
+  useEffect(() => {
+    if (!speechMessage) {
+      // setShowPopover(false);
+      return
+    }
+
+    setShowPopover(true);
+  }, [speechMessage])
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -107,14 +110,14 @@ export function Menu() {
         </PopoverTrigger>
         {showPopover && (
           <PopoverContent>
-            <div>{messages}</div>
+            <div>{speechMessage}</div>
           </PopoverContent>
         )}
       </Popover>
 
       <div className="flex items-center">
         <MenubarMenu>
-          <MenubarTrigger>
+          <MenubarTrigger id="settings">
             <SlidersHorizontal size={20} className="mr-2" />
             Settings
           </MenubarTrigger>
@@ -123,7 +126,7 @@ export function Menu() {
               <Label htmlFor="dark-mode" className="mr-5">
                 Dark Mode
               </Label>
-              <Switch onClick={toggleTheme} />
+              <Switch onClick={toggleTheme} id="dark-mode-toggle" />
             </div>
             <div className="m-3 flex items-center  justify-between">
               <Label className="mr-5">Experimental Mode</Label>

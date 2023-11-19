@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { api } from "~/trpc/react";
-import { Button } from "@/components/ui/button";
 
-export function Terminal() {
+interface TerminalProps {
+  terminalOutput: string,
+  setTerminalOutput: (value: React.SetStateAction<string>) => void
+}
+export function Terminal({ terminalOutput, setTerminalOutput }: TerminalProps) {
   const [command, setCommand] = useState("");
-  const [output, setOutput] = useState("");
   const terminalExecuteMutation = api.root.terminal_execute.useMutation();
 
   const handleExecute = async () => {
     try {
       const result = await terminalExecuteMutation.mutateAsync({ command });
-      setOutput(
+      setTerminalOutput(
         (prevOutput) => prevOutput + `\n$ ${command}\n${result.output}`,
       );
       setCommand(""); // Clear the command input after execution
     } catch (error) {
       console.error("Failed to execute command", error);
-      setOutput((prevOutput) => prevOutput + "\nError executing command");
+      setTerminalOutput((prevOutput) => prevOutput + "\nError executing command");
     }
   };
 
@@ -26,7 +28,7 @@ export function Terminal() {
       <Label className="mx-3 text-xl">Terminal</Label>
       <div className=" no-scrollbar ml-4 max-h-[20vh] overflow-y-auto">
         <div>
-          <pre>{output}</pre>
+          <pre>{terminalOutput}</pre>
         </div>
         <input
           type="text"
