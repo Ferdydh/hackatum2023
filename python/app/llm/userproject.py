@@ -22,14 +22,19 @@ class UserProject:
         pass
     async def execute_command(self, command: str) -> str:
         pass
+
+    async def preview_insert_lines(self, at: int, append_content: str) -> str:
+        pass
+    async def preview_replace_lines(self, start: int, end: int, new_content: str) -> str:
+        pass
     
     def register_all_tools(self):
         return register_tool([
             (new_file, self.new_file),
             (open_file, self.open_file),
             (remove_lines, self.remove_lines),
-            (insert_lines, self.insert_lines),
-            (replace_lines, self.replace_lines),
+        #    (insert_lines, self.insert_lines),
+        #    (replace_lines, self.replace_lines),
             (execute_command, self.execute_command)]
         )
     
@@ -86,6 +91,16 @@ class FakeProject(UserProject):
         self.files[self.current_file] = "\n".join(lines[:at] + [append_content] + lines[at:])
         return "success"
     
+    async def preview_insert_lines(self, at: int, append_content: str):
+        at = at - 1  # Adjust for zero-based indexing
+        lines = self.files[self.current_file].split("\n")
+        return "\n".join(lines[:at] + [append_content] + lines[at:])
+    
+    async def preview_replace_lines(self, start: int, end: int, new_content: str):
+        start, end = start - 1, end  
+        lines = self.files[self.current_file].split("\n")
+        return "\n".join(lines[:start] + [new_content] + lines[end:])
+
     async def replace_lines(self, start: int, end: int, new_content: str):
         start, end = start - 1, end  # Adjust for zero-based indexing
         if start >= end:
