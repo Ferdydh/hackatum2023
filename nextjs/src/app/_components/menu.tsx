@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import Ducky from "../img/Ducky.png";
+import MrDucky from "../img/MrDucky.png";
 import Image from "next/image";
 
 import {
@@ -49,6 +50,10 @@ export function Menu() {
       e.preventDefault(); // Prevent default to avoid any form submission
     }
   };
+
+  const [selectedAvatar, setSelectedAvatar] = useState("ducky"); // State to track selected avatar
+
+  const avatarImageSrc = selectedAvatar === "ducky" ? Ducky : MrDucky;
 
   const handleSubmit = () => {
     const url = "http://192.168.137.17:8002/v1/stream_api/prompt";
@@ -78,8 +83,8 @@ export function Menu() {
     <Menubar className="flex items-center justify-between">
       <div className="flex items-center">
         <Image
-          src={Ducky}
-          alt="Ducky"
+          src={avatarImageSrc}
+          alt="Avatar"
           className="mx-3 h-7 w-10 object-contain"
         />
         <Label className="text-xl">Ducky</Label>
@@ -124,15 +129,17 @@ export function Menu() {
               <Label className="mr-5">Experimental Mode</Label>
               <Switch />
             </div>
-            <Select>
-              <SelectTrigger className="">
+            <Select
+              onValueChange={(e) => setSelectedAvatar(e)}
+              value={selectedAvatar}
+            >
+              <SelectTrigger>
                 <SelectValue placeholder="Select an Avatar" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="apple">Ducky</SelectItem>
-                  <SelectItem value="banana">GPT</SelectItem>
-                  <SelectItem value="blueberry">Random</SelectItem>
+                  <SelectItem value="ducky">Ducky</SelectItem>
+                  <SelectItem value="mrducky">Mr Ducky</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
