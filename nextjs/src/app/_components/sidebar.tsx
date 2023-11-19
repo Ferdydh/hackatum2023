@@ -1,27 +1,44 @@
 "use client";
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { cn } from "@/lib/utils"
-import { Directory } from "~/lib/types"
-import { DirectoryComponent } from "./directory-component"
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { Directory } from "~/lib/types";
+import { DirectoryComponent } from "./directory-component";
 
 import { FolderPlus, FilePlus, FileIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { api } from "~/trpc/react";
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  root: Directory[] | undefined,
-  handleOpenFile: (fullPath: string) => void,
-  setRootFolder: (directories: Directory[]) => void
+  root: Directory[] | undefined;
+  handleOpenFile: (fullPath: string) => void;
+  setRootFolder: (directories: Directory[]) => void;
 }
 
-export function Sidebar({ className, root, handleOpenFile, setRootFolder }: SidebarProps) {
-  const [isAddingNewFile, setAddingNewFile] = useState(false)
+export function Sidebar({
+  className,
+  root,
+  handleOpenFile,
+  setRootFolder,
+}: SidebarProps) {
+  const [isAddingNewFile, setAddingNewFile] = useState(false);
 
   // TODO skeleton?
-  if (!root) {
-    root = mock_project_structure;
-  }
+  // if (!root) {
+  //   root = mock_project_structure;
+  // }
+
+  root = mock_project_structure;
 
   return (
     <div className={className}>
@@ -34,7 +51,11 @@ export function Sidebar({ className, root, handleOpenFile, setRootFolder }: Side
             <FolderPlus />
           </Button>
 
-          <Button variant="ghost" size="icon" onClick={() => setAddingNewFile(true)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setAddingNewFile(true)}
+          >
             <FilePlus />
           </Button>
         </div>
@@ -43,56 +64,67 @@ export function Sidebar({ className, root, handleOpenFile, setRootFolder }: Side
         <div className="pl-4">
           {root.map((directory, i) => (
             <div key={`${directory.full_path}-${i}`}>
-              <DirectoryComponent dir={directory} handleOpenFile={handleOpenFile} />
+              <DirectoryComponent
+                dir={directory}
+                handleOpenFile={handleOpenFile}
+                depth={0}
+              />
             </div>
           ))}
-          {isAddingNewFile && <AddNewFileComponent setRootFolder={setRootFolder} setAddingNewFile={setAddingNewFile} />}
+          {isAddingNewFile && (
+            <AddNewFileComponent
+              setRootFolder={setRootFolder}
+              setAddingNewFile={setAddingNewFile}
+            />
+          )}
         </div>
       </ScrollArea>
     </div>
-  )
+  );
 }
 interface AddNewFileComponentProps {
-  setAddingNewFile: (isAddingNewFile: boolean) => void,
-  setRootFolder: (directories: Directory[]) => void
+  setAddingNewFile: (isAddingNewFile: boolean) => void;
+  setRootFolder: (directories: Directory[]) => void;
 }
-function AddNewFileComponent({ setAddingNewFile, setRootFolder }: AddNewFileComponentProps) {
-  const [open, setOpen] = useState(false)
+function AddNewFileComponent({
+  setAddingNewFile,
+  setRootFolder,
+}: AddNewFileComponentProps) {
+  const [open, setOpen] = useState(false);
   const [fileName, setFileName] = useState("");
 
   const mutationSaveNewFile = api.root.new_file.useMutation({
     onSuccess: ({ root }) => {
-      setRootFolder(root)
-    }
-  })
+      setRootFolder(root);
+    },
+  });
 
   useEffect(() => {
     document.onmousedown = (e) => {
       e.preventDefault();
-      if (!fileName) setOpen(true)
-    }
-  }, [])
+      if (!fileName) setOpen(true);
+    };
+  }, []);
 
-  function handleKeyDown(e: { key: string; }) {
-    if (e.key === 'Enter' && fileName) {
+  function handleKeyDown(e: { key: string }) {
+    if (e.key === "Enter" && fileName) {
       // Call edit_file
-      mutationSaveNewFile.mutate({ "full_path": fileName })
+      mutationSaveNewFile.mutate({ full_path: fileName });
 
       setAddingNewFile(false);
-      document.onmousedown = null
+      document.onmousedown = null;
     }
   }
 
   function handleDiscardNewFileDialog() {
     setAddingNewFile(false);
-    document.onmousedown = null
+    document.onmousedown = null;
   }
 
-
   function handleSaveNewFileDialog() {
-    mutationSaveNewFile.mutate({ "full_path": fileName })
+    mutationSaveNewFile.mutate({ full_path: fileName });
     setAddingNewFile(false);
-    document.onmousedown = null
+    document.onmousedown = null;
   }
 
   return (
@@ -103,7 +135,13 @@ function AddNewFileComponent({ setAddingNewFile, setRootFolder }: AddNewFileComp
         className="w-full justify-start font-normal"
       >
         <FileIcon size={20} className="mr-2" />
-        <input className="w-full h-full z-10" autoFocus onKeyDown={handleKeyDown} value={fileName} onChange={(e) => setFileName(e.target.value)} />
+        <input
+          className="z-10 h-full w-full"
+          autoFocus
+          onKeyDown={handleKeyDown}
+          value={fileName}
+          onChange={(e) => setFileName(e.target.value)}
+        />
       </Button>
 
       <AlertDialogContent>
@@ -115,19 +153,31 @@ function AddNewFileComponent({ setAddingNewFile, setRootFolder }: AddNewFileComp
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleDiscardNewFileDialog}>Discard</AlertDialogCancel>
-          <AlertDialogAction onClick={handleSaveNewFileDialog}>Save File</AlertDialogAction>
+          <AlertDialogCancel onClick={handleDiscardNewFileDialog}>
+            Discard
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={handleSaveNewFileDialog}>
+            Save File
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
 }
 
-
 const mock_project_structure: Directory[] = [
   {
-    name: "file",
-    full_path: "/file",
+    name: "folder",
+    full_path: "/folder",
+    sub_directories: [
+      {
+        name: "file",
+        full_path: "/folder/file",
+      },
+    ],
   },
-]
-
+  {
+    name: "data",
+    full_path: "/folder/data",
+  },
+];
