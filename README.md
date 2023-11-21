@@ -1,5 +1,8 @@
 # Ducky
 
+## Initial Setup
+Set up your OpenAI API key in the `python` folder, by copying the .env.example file and renamining it to .env, and adding your API key to the file.
+
 ## Running
 
 Docker compose should be working:
