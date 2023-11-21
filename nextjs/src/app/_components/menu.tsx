@@ -75,7 +75,7 @@ export function Menu({ handleCommandStream, speechMessage, showPopover, selected
   const avatarImageSrc = selectedAvatar === "ducky" ? Ducky : MrDucky;
 
   const handleSubmit = () => {
-    const url = "http://192.168.137.17:8002/v1/stream_api/prompt";
+    const url = "http://127.0.0.1:8002/v1/stream_api/prompt";
     const data = { user_message: prompt };
 
     const eventSource = new EventSource(

@@ -27,6 +27,9 @@ class UserProject:
     async def execute_command(self, command: str) -> str:
         pass
 
+    async def toggle_theme(self) -> str:
+        pass
+
     async def preview_insert_lines(self, at: int, append_content: str) -> str:
         pass
     async def preview_replace_lines(self, start: int, end: int, new_content: str) -> str:
@@ -39,7 +42,9 @@ class UserProject:
             (remove_lines, self.remove_lines),
         #    (insert_lines, self.insert_lines),
         #    (replace_lines, self.replace_lines),
-            (execute_command, self.execute_command)]
+            (execute_command, self.execute_command),
+            (toggle_theme, self.toggle_theme),
+            ]
         )
     
 
@@ -135,6 +140,9 @@ class FakeProject(UserProject):
     async def execute_command(self, command: str):
         return command+"\nsuccess"
     
+    async def toggle_theme(self):
+        return "success"
+    
 
 global_messages = []
 global_state = FakeProject()
@@ -180,3 +188,8 @@ class execute_command(BaseModel):
     """
     command: str = Field(description="The command to execute.")
 
+class toggle_theme(BaseModel):
+    """
+    Toggle between light and dark themes.
+    """
+    pass

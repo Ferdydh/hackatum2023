@@ -47,8 +47,8 @@ export function FileEditor({ fileContent, className, fileFullPath, handleSaveFil
   );
 }
 
-const duckAscii = `READONLY MODE
-Tip: Open a file to start editing
+const duckAscii = `Welcome to Ducky!
+Tip: Create a file to start editing
                               
         @@@@@@@@@             
       @@@@&@@@@@@@@           
