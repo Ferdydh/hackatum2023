@@ -12,7 +12,7 @@ const STREAM_BACKEND_URI = "http://localhost:8002/v1/stream_api/";
 export const mainRouter = createTRPCRouter({
   get_project_directory: publicProcedure.query(async () => {
     const { data } = await axios.get<Directory[]>(
-      BACKEND_URI + "get_project_directory",
+      LOCAL_BACKEND_URI + "get_project_directory",
     );
 
     // const { data } = await axios.get<Directory[]>(BACKEND_URI + "get_project_directory", {
