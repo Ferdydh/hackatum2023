@@ -9,7 +9,8 @@ Docker compose should be working:
 ```bash
 docker-compose up
 ```
-...but right now it doesn't on my machine. So, you can run the server and the client separately:
+
+Just in case it doesn't, you can run the services individually.
 
 ```bash
 cd nextjs
